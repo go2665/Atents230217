@@ -724,7 +724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextSceneName: 14_LoadingSample
-  loadingBarSpeed: 1
+  loadingBarSpeed: 0.1
 --- !u!4 &1266519279
 Transform:
   m_ObjectHideFlags: 0
