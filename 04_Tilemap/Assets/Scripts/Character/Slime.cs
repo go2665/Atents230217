@@ -17,6 +17,25 @@ public class Slime : PoolObject
     /// </summary>
     Vector2Int Position => map.WorldToGrid(transform.position);
 
+    /// <summary>
+    /// 슬라임 풀의 트랜스폼
+    /// </summary>
+    Transform pool = null;
+    public Transform Pool
+    {
+        get => pool;            // 읽기는 마음대로
+        set
+        {
+            if(pool == null)    // 쓰기는 딱 한번만 가능
+            {
+                pool = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 죽었을 때 실행될 델리게이트(보너스용)
+    /// </summary>
     public Action onDie;
 
 
@@ -253,12 +272,23 @@ public class Slime : PoolObject
     /// </summary>
     void Die()
     {
+        onDie?.Invoke();
+        onDie = null;
+
+        ReturnToPool();
+    }
+
+    /// <summary>
+    /// 슬라임을 풀로 되돌리는 작업
+    /// </summary>
+    public void ReturnToPool()
+    {
         path.Clear();           // 경로를 다 비우기
         PathLine.ClearPath();   // 라인랜더러 초기화 하고 오브젝트 비활성화
 
-        onDie?.Invoke();
-        onDie = null;
-        gameObject.SetActive(false);
+        transform.SetParent(Pool);      // 부모를 풀로 되돌리기
+
+        gameObject.SetActive(false);    // 비활성화 하기
     }
 
     /// <summary>

@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MapManager : MonoBehaviour
 {
     /// <summary>
-    /// 서브맵의 가로 갯수
+    /// 서브맵의 세로 갯수
     /// </summary>
     const int HeightCount = 3;
 
     /// <summary>
-    /// 서브맵의 세로 갯수
+    /// 서브맵의 가로 갯수
     /// </summary>
     const int WidthCount = 3;
 
@@ -48,7 +49,7 @@ public class MapManager : MonoBehaviour
         Unload = 0,     // 로딩 안되어있음
         PendingUnload,  // 로딩 해제 진행중
         PendingLoad,    // 로딩 진행중
-        Load            // 로딩 완료됨
+        Loaded            // 로딩 완료됨
     }
 
     /// <summary>
@@ -78,10 +79,82 @@ public class MapManager : MonoBehaviour
 
     public void PreInitialize()
     {
+        sceneNames = new string[HeightCount * WidthCount];
+        sceneLoadState = new SceneLoadState[HeightCount * WidthCount];
+        for(int y = 0;y< HeightCount;y++) 
+        { 
+            for(int x = 0;x<WidthCount;x++)
+            {
+                int index = GetIndex(x, y);
+                sceneNames[index] = $"{SceneNameBase}_{x}_{y}";
+                sceneLoadState[index] = SceneLoadState.Unload;
+            }
+        }
     }
 
     public void Initialize()
     {
+        for(int i=0;i<sceneLoadState.Length;i++) 
+        {
+            sceneLoadState[i] = SceneLoadState.Unload; 
+        }
 
+        // 플레이어 기준으로 플레이어 주변의 맵만 로딩하기
     }
+
+    int GetIndex(int x, int y)
+    {
+        return x + WidthCount * y;
+    }
+
+    void RequestAsyncSceneLoad(int x, int y)
+    {
+        int index = GetIndex(x, y);
+        if (sceneLoadState[index] == SceneLoadState.Unload) // 언로드 상태일 때만 로딩 시도
+        {
+            // 비동기로 로딩 시작
+            AsyncOperation async = SceneManager.LoadSceneAsync(sceneNames[index], LoadSceneMode.Additive);
+            // 로딩이 끝나면 Loaded 상태로 변경하는 람다함수를 델리게이트에 추가
+            async.completed += (_) => sceneLoadState[index] = SceneLoadState.Loaded;  
+            sceneLoadState[index] = SceneLoadState.PendingLoad; // 로딩 진행중이라고 표시
+        }
+    }
+
+    void RequestAsyncSceneUnload(int x, int y)
+    {
+        int index = GetIndex(x, y);
+        if(sceneLoadState[index] == SceneLoadState.Loaded)
+        {
+            // 슬라임을 풀로 되돌려서 삭제 되지 않게 만들기
+            Scene scene = SceneManager.GetSceneByName(sceneNames[index]);
+            GameObject[] sceneObjs = scene.GetRootGameObjects();
+            if(sceneObjs != null && sceneObjs.Length > 0)
+            {
+                Slime[] slimes = sceneObjs[0].GetComponentsInChildren<Slime>();
+                foreach(var slime in slimes) 
+                { 
+                    slime.ReturnToPool();
+                }
+            }
+
+            // 비동기로 언로드 시작
+            AsyncOperation async = SceneManager.UnloadSceneAsync(sceneNames[index]);
+            // 언로드가 끝나면 Unload 상태로 변경하는 람다함수를 델리게이트에 추가
+            async.completed += (_) => sceneLoadState[index] = SceneLoadState.Unload;
+            sceneLoadState[index] = SceneLoadState.PendingUnload;   // 언로드 진행중이라고 표시
+        }
+    }
+
+    // 테스트용 함수 -------------------------------------------------------------------------------
+#if UNITY_EDITOR
+    public void Test_LoadScene(int x, int y)
+    {
+        RequestAsyncSceneLoad(x, y);
+    }
+
+    public void Test_UnloadScene(int x, int y)
+    {
+        RequestAsyncSceneUnload(x, y);
+    }
+#endif
 }
