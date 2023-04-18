@@ -38,6 +38,11 @@ public class Slime : PoolObject
     /// </summary>
     public Action onDie;
 
+    /// <summary>
+    /// 이동 경로를 보일지 안보일지 결정. true면 보이고, false면 안보인다.
+    /// </summary>
+    public bool isShowPathLine = false;
+
 
     // 이동 관련 변수들 ----------------------------------------------------------------------------
 
@@ -139,7 +144,7 @@ public class Slime : PoolObject
 
     private void Awake()
     {
-        pathLine = GetComponentInChildren<PathLine>();
+        pathLine = GetComponentInChildren<PathLine>();        
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         mainMaterial = spriteRenderer.material;
@@ -147,7 +152,7 @@ public class Slime : PoolObject
         onPhaseEnd += () =>
         {
             isActivate = true;  // 페이즈가 끝나면 isActivate를 활성화
-            PathLine.gameObject.SetActive(true);
+            PathLine.gameObject.SetActive(isShowPathLine);  // 설정에 따라 보이고 안보이고를 결정
         };
         onDissolveEnd += Die;   // 디졸브가 끝나면 죽게 만들기
 
