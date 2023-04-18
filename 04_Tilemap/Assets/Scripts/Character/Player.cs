@@ -27,6 +27,29 @@ public class Player : MonoBehaviour
     /// </summary>
     bool isMove = false;
 
+    /// <summary>
+    /// 플레이어가 현재 위치하고 있는 맵의 그리드 좌표
+    /// </summary>
+    Vector2Int currentMap;
+
+    Vector2Int CurrentMap
+    {
+        get => currentMap;
+        set
+        {
+            if(value != currentMap)             // 맵을 이동했을 때만
+            {
+                currentMap = value;             // 변경하고 
+                onMapMoved?.Invoke(currentMap); // 델리게이트 실행
+            }
+        }
+    }
+
+    /// <summary>
+    /// 맵이 변경되었을 때 실행될 델리게이트(파라메터:진입한 맵의 그리드좌표)
+    /// </summary>
+    public Action<Vector2Int> onMapMoved;
+
     // 공격 관련 -----------------------------------------------------------------------------------
     /// <summary>
     /// 공격 쿨타임
@@ -65,6 +88,8 @@ public class Player : MonoBehaviour
 
     // 입력 인풋 액션
     PlayerInputActions inputActions;
+
+    MapManager mapManager;
 
     private void Awake()
     {
@@ -115,6 +140,11 @@ public class Player : MonoBehaviour
         inputActions.Player.Disable();
     }
 
+    private void Start()
+    {
+        mapManager = GameManager.Inst.MapManager;
+    }
+
     private void Update()
     {
         currentAttackCoolTime -= Time.deltaTime;    // 무조건 쿨타임 감소시키기
@@ -124,6 +154,8 @@ public class Player : MonoBehaviour
     {
         //transform.Translate(Time.fixedDeltaTime * speed * inputDir);
         rigid.MovePosition(rigid.position + Time.fixedDeltaTime * speed * inputDir);    // 이동 처리
+
+        CurrentMap = mapManager.WorldToGrid(rigid.position);
     }
 
     private void OnMove(InputAction.CallbackContext context)

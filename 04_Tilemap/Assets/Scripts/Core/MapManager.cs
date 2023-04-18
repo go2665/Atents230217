@@ -149,6 +149,14 @@ public class MapManager : MonoBehaviour
         }
 
         // 플레이어 기준으로 플레이어 주변의 맵만 로딩하기
+        Player player = GameManager.Inst.Player;
+        if( player != null )
+        {
+            player.onMapMoved += (gridPos) => RefreshScenes(gridPos.x, gridPos.y);  // 맵 변경될 때마다 주변 로딩 요청
+            Vector2Int grid = WorldToGrid(player.transform.position);
+            RequestAsyncSceneLoad(grid.x, grid.y);  // 플레이어가 존재하는 맵을 최우선으로 로딩요청
+            RefreshScenes(grid.x, grid.y);          // 주변 위치 로딩 요청
+        }
     }
 
     /// <summary>
@@ -170,7 +178,7 @@ public class MapManager : MonoBehaviour
     void RequestAsyncSceneLoad(int x, int y)
     {
         int index = GetIndex(x, y);
-        if(sceneLoadState[index] == SceneLoadState.Unload)
+        if (sceneLoadState[index] == SceneLoadState.Unload)
         {
             loadWork.Add(index);    // 로딩이 안된 맵이면 loadWork에 추가
         }
@@ -188,7 +196,7 @@ public class MapManager : MonoBehaviour
         {
             unloadWork.Add(index);  // 로딩이 되어있는 맵이면 unloadWork에 추가
         }
-
+        
         // 슬라임을 풀로 되돌려서 삭제 되지 않게 만들기
         Scene scene = SceneManager.GetSceneByName(sceneNames[index]);   // 해당 씬 가져오기
         if (scene.isLoaded) // 로드 되어 있으면
@@ -244,6 +252,29 @@ public class MapManager : MonoBehaviour
                 unloadWorkComplete.Add(index);                      // 로딩 해제 완료 목록에 추가
             };
         }
+    }
+
+    /// <summary>
+    /// 월드 좌표가 어떤 그리드에 있는지 계산하는 함수
+    /// </summary>
+    /// <param name="worldPos">확인할 월드 좌표</param>
+    /// <returns>그리드 좌표(맵기준)</returns>
+    public Vector2Int WorldToGrid(Vector3 worldPos)
+    {
+        Vector2 offset = (Vector2)worldPos - totalOrigin;
+        return new Vector2Int((int)(offset.x / mapWidthLenght), (int)(offset.y / mapHeightLenght));
+    }
+
+    /// <summary>
+    /// 지정된 그리드위치(맵) 주변은 로딩 요청을 하고 그 외는 전부 로딩 해제하는 함수
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    void RefreshScenes(int x, int y)
+    {
+        Debug.Log($"{x},{y} : 요청");
+        // x, y를 포함한 주변 9개 맵은 로딩이 되어야 한다.
+        // 그 외는 모두 로딩이 해제되어야 한다.
     }
 
     // 테스트용 함수 -------------------------------------------------------------------------------
