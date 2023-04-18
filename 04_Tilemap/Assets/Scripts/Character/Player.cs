@@ -6,6 +6,64 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    // 수명 관련 -----------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 플레이어의 최대 수명
+    /// </summary>
+    public float maxLifeTime = 10.0f;
+
+    /// <summary>
+    /// 플레이어의 현재 수명
+    /// </summary>
+    float lifeTime;
+
+    /// <summary>
+    /// 수명 확인 및 설정용 프로퍼티
+    /// </summary>
+    public float LifeTime
+    {
+        get => lifeTime;
+        set
+        {
+            lifeTime = value;
+            if(lifeTime < 0.0f && !isDead)
+            {
+                Die();  // 살아있는데 수명이 0이하면 사망
+            }
+            else
+            {
+                lifeTime = Mathf.Clamp(value, 0.0f, maxLifeTime);   // 최소0, 최대 maxLifeTime로 클램프
+            }
+            onLifeTimeChange?.Invoke(lifeTime/maxLifeTime);
+        }
+    }
+
+    /// <summary>
+    /// 플레이어 수명이 변경될 때 실행될 델리게이트. (파라메터:비율) 
+    /// </summary>
+    public Action<float> onLifeTimeChange;
+
+    /// <summary>
+    /// 전체 플레이 시간
+    /// </summary>
+    float totalPlayTime = 0.0f;
+
+    /// <summary>
+    /// 잡은 슬라임 수
+    /// </summary>
+    int killCount = 0;
+
+    /// <summary>
+    /// 플레이어의 생존 여부
+    /// </summary>
+    bool isDead = false;
+
+    /// <summary>
+    /// 플레이어가 죽었을 때 실행될 델리게이트. 전체 플레이 시간과 킬 카운트 넘겨줌
+    /// </summary>
+    public Action<float, int> onDie;
+
     // 이동 관련 -----------------------------------------------------------------------------------
     /// <summary>
     /// 플레이어의 이동 속도
@@ -143,11 +201,15 @@ public class Player : MonoBehaviour
     private void Start()
     {
         mapManager = GameManager.Inst.MapManager;
+        LifeTime = maxLifeTime;
     }
 
     private void Update()
     {
         currentAttackCoolTime -= Time.deltaTime;    // 무조건 쿨타임 감소시키기
+        
+        LifeTime -= Time.deltaTime;
+        totalPlayTime += Time.deltaTime;
     }
 
     private void FixedUpdate()
@@ -267,5 +329,10 @@ public class Player : MonoBehaviour
         {
             attackAreaCenter.rotation = Quaternion.identity;    // 중립
         }
+    }
+
+    void Die()
+    {
+
     }
 }

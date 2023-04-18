@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ca1ef82f4268734db467db53b705261, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isShowPathLine: 1
+  isShowPathLine: 0
   moveSpeed: 2
   phaseDuration: 0.5
   dissolveDuration: 1
