@@ -122,9 +122,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isShowPathLine: 0
+  lifeTimeBonus: 2
   moveSpeed: 2
   phaseDuration: 0.5
-  dissolveDuration: 1
+  dissolveDuration: 0.5
 --- !u!58 &6770322592063457770
 CircleCollider2D:
   m_ObjectHideFlags: 0

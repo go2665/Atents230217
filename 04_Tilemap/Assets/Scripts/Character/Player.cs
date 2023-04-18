@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
             lifeTime = value;
             if(lifeTime < 0.0f && !isDead)
             {
-                Die();  // 살아있는데 수명이 0이하면 사망
+                Die();  // 살아있는데 수명이 0이하면 사망                
             }
             else
             {
@@ -331,8 +331,30 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 플레이어가 죽으면 실행되는 함수
+    /// </summary>
     void Die()
     {
+        lifeTime = 0.0f;    // 수명은 0으로
+        isDead = true;      // 죽었다고 표시
+        onDie?.Invoke(totalPlayTime, killCount);    // 죽었다고 알림
+    }
 
+    /// <summary>
+    /// 수명 추가해주는 함수
+    /// </summary>
+    /// <param name="time">추가되는 수명</param>
+    public void AddLifeTime(float time)
+    {
+        LifeTime += time;
+    }
+
+    /// <summary>
+    /// 킬카운트 1증가 시키는 함수
+    /// </summary>
+    public void AddKillCount()
+    {
+        killCount++;
     }
 }

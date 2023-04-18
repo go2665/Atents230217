@@ -43,6 +43,11 @@ public class Slime : PoolObject
     /// </summary>
     public bool isShowPathLine = false;
 
+    /// <summary>
+    /// 이 슬라임이 죽을 때 증가시킬 플레이어의 수명
+    /// </summary>
+    public float lifeTimeBonus = 2.0f;
+
 
     // 이동 관련 변수들 ----------------------------------------------------------------------------
 
