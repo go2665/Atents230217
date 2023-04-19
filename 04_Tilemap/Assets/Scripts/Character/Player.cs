@@ -351,8 +351,9 @@ public class Player : MonoBehaviour
     /// </summary>
     void Die()
     {
-        lifeTime = 0.0f;    // 수명은 0으로
-        isDead = true;      // 죽었다고 표시
+        lifeTime = 0.0f;                // 수명은 0으로
+        isDead = true;                  // 죽었다고 표시
+        inputActions.Player.Disable();  // 입력 막기
         onDie?.Invoke(totalPlayTime, KillCount);    // 죽었다고 알림
     }
 
@@ -362,7 +363,10 @@ public class Player : MonoBehaviour
     /// <param name="time">추가되는 수명</param>
     public void AddLifeTime(float time)
     {
-        LifeTime += time;
+        if (!isDead)
+        {
+            LifeTime += time;
+        }
     }
 
     /// <summary>
@@ -370,6 +374,9 @@ public class Player : MonoBehaviour
     /// </summary>
     public void AddKillCount()
     {
-        KillCount++;
+        if( !isDead )
+        {
+            KillCount++;
+        }
     }
 }

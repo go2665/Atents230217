@@ -152,6 +152,16 @@ public class MapManager : MonoBehaviour
         Player player = GameManager.Inst.Player;
         if( player != null )
         {
+            player.onDie += (_,_) =>    // 플레이어가 죽으면
+            {
+                for(int y = 0;y< HeightCount;y++)
+                {
+                    for( int x = 0; x< WidthCount;x++)
+                    {
+                        RequestAsyncSceneUnload(x, y);  // 모든씬 로딩 해제
+                    }
+                }
+            };
             player.onMapMoved += (gridPos) =>
             {
                 RefreshScenes(gridPos.x, gridPos.y);  // 맵 변경될 때마다 주변 로딩 요청
