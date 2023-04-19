@@ -27,18 +27,18 @@ public class KillCountText : MonoBehaviour
 
     private void Update()
     {
-        currentValue += Time.deltaTime * speed;
-        if( currentValue > targetValue)
+        // 킬카운트는 무조건 증가만 진행됨
+        currentValue += Time.deltaTime * speed; // 무조건 계속 증가
+        if( currentValue > targetValue)         // 목표치를 넘어서면
         {
-            currentValue = targetValue;
+            currentValue = targetValue;         // 목표치로 설정
         }
-        int temp = (int)currentValue;
-        killCount.text = temp.ToString();
+        int temp = (int)currentValue;   
+        killCount.text = temp.ToString();       // 인티저로 변경해서 소수점 날리고 그대로 출력
     }
 
     private void OnKillCountChange(int count)
     {
-        //killCount.text = count.ToString();
-        targetValue = count;
+        targetValue = count;    // 목표치 설정
     }
 }

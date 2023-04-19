@@ -6,7 +6,14 @@ using UnityEngine.UI;
 
 public class LifeTimeGauge : MonoBehaviour
 {
+    /// <summary>
+    /// 증가 속도
+    /// </summary>
     public float speed = 1.0f;
+
+    /// <summary>
+    /// 목표치
+    /// </summary>
     float targetValue = 1.0f;
 
     Slider slider;
@@ -21,12 +28,14 @@ public class LifeTimeGauge : MonoBehaviour
         Player player = GameManager.Inst.Player;
         player.onLifeTimeChange += OnLifeTimeChange;
 
-        slider.value = 1;
+        slider.value = 1;   // 초기화
         targetValue = 1.0f;
     }
 
     private void Update()
     {
+        // slider.value가 targetValue쪽으로 변경되도록 실행
+
         if( slider.value > targetValue)    // 슬라이더 위치가 목표치보다 클때
         {
             // slider.value가 줄어야 한다.
@@ -47,11 +56,13 @@ public class LifeTimeGauge : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 플레이어의 수명이 변경되면 실행되는 함수
+    /// </summary>
+    /// <param name="ratio">비율(0~1)</param>
     private void OnLifeTimeChange(float ratio)
     {
-        //slider.value = ratio;
-        targetValue = ratio;
+        targetValue = ratio;    // 목표치만 변경
     }
 }
 
-// LifeTimeGauge, LifeTimeText, KillCountText, PostProcessManager의 변화가 천천히 일어나게 만들기

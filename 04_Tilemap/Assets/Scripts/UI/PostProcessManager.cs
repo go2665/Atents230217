@@ -57,7 +57,6 @@ public class PostProcessManager : MonoBehaviour
 
     private void OnLifeTimeChange(float ratio)
     {
-        //vignette.intensity.value = 1.0f - ratio;        // 수명 변할 때마다 비네트 정도 변경
-        targetValue = 1.0f - ratio;
+        targetValue = 1.0f - ratio;     // 수명 변할 때마다 비네트 정도 변경
     }
 }
