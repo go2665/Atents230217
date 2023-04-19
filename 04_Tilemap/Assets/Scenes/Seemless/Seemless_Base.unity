@@ -1575,11 +1575,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5894460801470022872, guid: 628a52f5ef41cb94abd712b61d3eac53, type: 3}
       propertyPath: speed
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5894460801470022872, guid: 628a52f5ef41cb94abd712b61d3eac53, type: 3}
       propertyPath: maxLifeTime
-      value: 3
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5894460801470022873, guid: 628a52f5ef41cb94abd712b61d3eac53, type: 3}
       propertyPath: m_RootOrder

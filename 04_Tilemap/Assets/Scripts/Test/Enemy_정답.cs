@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEditor;
 using System;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class Enemy_정답 : MonoBehaviour
 {
@@ -60,8 +63,10 @@ public class Enemy_정답 : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         // 시야 반경 원으로 그리기
         Handles.DrawWireDisc(transform.position, transform.up, sightRange);
+#endif
     }
 
     private void Update()

@@ -49,6 +49,7 @@ public class GameOverPanel : MonoBehaviour
 
     private void Start()
     {
+        StopAllCoroutines();
         Player player = GameManager.Inst.Player;
         player.onDie += OnPlayerDie;    // 플레이어 사망시 실행할 함수 등록
     }
