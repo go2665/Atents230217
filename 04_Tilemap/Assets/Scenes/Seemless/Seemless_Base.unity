@@ -313,6 +313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e101aae37096a642bf30bd6ddd93c75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 1
 --- !u!1 &188730099
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,6 +754,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1328442956}
   - component: {fileID: 1328442955}
+  - component: {fileID: 1328442957}
   m_Layer: 0
   m_Name: PostprocessVolume
   m_TagString: Untagged
@@ -792,6 +794,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1328442957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328442954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401bbb91b4630164b84cadd092ef3396, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
 --- !u!1 &1343006395
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,6 +1141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12493a93a6ad8e84fae5c17c3a6aecac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 1
 --- !u!1 &1759103522
 GameObject:
   m_ObjectHideFlags: 0
@@ -1330,6 +1346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc22430c7634f7b499ee06c12eac574e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 10
 --- !u!114 &1766511913
 MonoBehaviour:
   m_ObjectHideFlags: 0
