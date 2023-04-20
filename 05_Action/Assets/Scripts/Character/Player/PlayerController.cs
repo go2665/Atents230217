@@ -145,6 +145,8 @@ public class PlayerController : MonoBehaviour
                     animator.SetFloat("Speed", 0.0f);
                     break;
             }
+
+            inputDir.y = -2.0f; // 강제로 바닥으로 내리기
         }
         else
         {
