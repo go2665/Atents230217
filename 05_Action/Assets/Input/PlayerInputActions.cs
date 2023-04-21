@@ -222,6 +222,34 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Effect"",
+            ""id"": ""972804c4-935b-4c1b-aba8-7a35f80ec681"",
+            ""actions"": [
+                {
+                    ""name"": ""CursorMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""e5fa45ae-aa05-4af3-8779-f25a0fe1c952"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""98a22778-6eb5-4038-862e-118340aa6104"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CursorMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -254,6 +282,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_MoveModeChange = m_Player.FindAction("MoveModeChange", throwIfNotFound: true);
+        // Effect
+        m_Effect = asset.FindActionMap("Effect", throwIfNotFound: true);
+        m_Effect_CursorMove = m_Effect.FindAction("CursorMove", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -415,6 +446,39 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Effect
+    private readonly InputActionMap m_Effect;
+    private IEffectActions m_EffectActionsCallbackInterface;
+    private readonly InputAction m_Effect_CursorMove;
+    public struct EffectActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public EffectActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @CursorMove => m_Wrapper.m_Effect_CursorMove;
+        public InputActionMap Get() { return m_Wrapper.m_Effect; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(EffectActions set) { return set.Get(); }
+        public void SetCallbacks(IEffectActions instance)
+        {
+            if (m_Wrapper.m_EffectActionsCallbackInterface != null)
+            {
+                @CursorMove.started -= m_Wrapper.m_EffectActionsCallbackInterface.OnCursorMove;
+                @CursorMove.performed -= m_Wrapper.m_EffectActionsCallbackInterface.OnCursorMove;
+                @CursorMove.canceled -= m_Wrapper.m_EffectActionsCallbackInterface.OnCursorMove;
+            }
+            m_Wrapper.m_EffectActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @CursorMove.started += instance.OnCursorMove;
+                @CursorMove.performed += instance.OnCursorMove;
+                @CursorMove.canceled += instance.OnCursorMove;
+            }
+        }
+    }
+    public EffectActions @Effect => new EffectActions(this);
     private int m_KMSchemeIndex = -1;
     public InputControlScheme KMScheme
     {
@@ -436,5 +500,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnMoveModeChange(InputAction.CallbackContext context);
+    }
+    public interface IEffectActions
+    {
+        void OnCursorMove(InputAction.CallbackContext context);
     }
 }
