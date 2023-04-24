@@ -84,6 +84,9 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     CharacterController controller;
 
+    readonly int AttackHash = Animator.StringToHash("Attack");
+    readonly int SpeedHash = Animator.StringToHash("Speed");
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -97,10 +100,12 @@ public class PlayerController : MonoBehaviour
         inputActions.Player.Move.performed += OnMove;
         inputActions.Player.Move.canceled += OnMove;
         inputActions.Player.MoveModeChange.performed += OnMoveModeChange;
+        inputActions.Player.Attack.performed += OnAttack;
     }
 
     private void OnDisable()
     {
+        inputActions.Player.Attack.performed -= OnAttack;
         inputActions.Player.MoveModeChange.performed -= OnMoveModeChange;
         inputActions.Player.Move.canceled -= OnMove;
         inputActions.Player.Move.performed -= OnMove;
@@ -136,13 +141,13 @@ public class PlayerController : MonoBehaviour
             switch (Move_Mode)  // MoveMode에 따라 애니메이션 변경
             {
                 case MoveMode.Walk:
-                    animator.SetFloat("Speed", 0.3f);
+                    animator.SetFloat(SpeedHash, 0.3f);
                     break;
                 case MoveMode.Run:
-                    animator.SetFloat("Speed", 1.0f);
+                    animator.SetFloat(SpeedHash, 1.0f);
                     break;
                 default:
-                    animator.SetFloat("Speed", 0.0f);
+                    animator.SetFloat(SpeedHash, 0.0f);
                     break;
             }
 
@@ -151,7 +156,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             // 이동 입력이 끝났다.
-            animator.SetFloat("Speed", 0.0f);
+            animator.SetFloat(SpeedHash, 0.0f);
         }
     }
 
@@ -166,6 +171,11 @@ public class PlayerController : MonoBehaviour
         {
             Move_Mode = MoveMode.Walk;
         }
+    }
+
+    private void OnAttack(InputAction.CallbackContext _)
+    {
+        animator.SetTrigger(AttackHash);
     }
 
 }
