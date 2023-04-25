@@ -10,7 +10,6 @@ public class ItemSlot
     uint slotIndex;
     public uint Index => slotIndex;
 
-
     /// <summary>
     /// 이 슬롯에 들어있는 아이템 종류
     /// </summary>
@@ -92,7 +91,7 @@ public class ItemSlot
     public bool IncreaseSlotItem(out uint overCount, uint increaseCount = 1)
     {
         bool result;
-        int over = 0;
+        int over;
 
         // 넘치느냐 안넘치느냐를 판별하기
         uint newCount = ItemCount + increaseCount;
