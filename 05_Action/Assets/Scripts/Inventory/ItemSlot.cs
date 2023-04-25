@@ -95,26 +95,53 @@ public class ItemSlot
         int over = 0;
 
         // 넘치느냐 안넘치느냐를 판별하기
+        uint newCount = ItemCount + increaseCount;
+        over = (int)newCount - (int)ItemData.maxStackCount;
 
         if(over > 0)
         {
             // 넘친 경우에 대한 처리
+            ItemCount = ItemData.maxStackCount;
+            overCount = (uint)over;
             result = false;
+            Debug.Log($"인벤토리 {slotIndex}번 슬롯에 " +
+                $"\"{ItemData.itemName}\"아이템이 최대치까지 증가. " +
+                $"현재 {ItemCount}개. {over}개 넘침.");
         }
         else
         {
             // 안 넘친 경우에 대한 처리
+            ItemCount = newCount;
+            overCount = 0;
             result = true;
+            Debug.Log($"인벤토리 {slotIndex}번 슬롯에 " +
+                $"\"{ItemData.itemName}\"아이템이 {increaseCount}개 증가. " +
+                $"현재 {ItemCount}개.");
         }
-        overCount = 999999;
-
 
         return result;
     }
 
-    // 아이템 갯수 감소시키기
-    public void DecreaseSlotItem()
+    /// <summary>
+    /// 아이템 갯수 감소시키는 함수
+    /// </summary>
+    /// <param name="decreaseCount">감소시킬 아이템 갯수</param>
+    public void DecreaseSlotItem(uint decreaseCount = 1)
     {
+        int newCount = (int)ItemCount - (int)decreaseCount; // 언더플로우 대비해서 int로 변경 후 빼기
 
+        if( newCount < 1 )
+        {
+            // 새 갯수가 0개 이하
+            ClearSlotItem();
+        }
+        else
+        {
+            // 갯수가 남아있음.
+            ItemCount = (uint)newCount;
+            Debug.Log($"인벤토리 {slotIndex}번 슬롯에 " +
+                $"\"{ItemData.itemName}\"아이템이 {decreaseCount}개 감소. " +
+                $"현재 {ItemCount}개.");
+        }
     }
 }
