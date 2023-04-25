@@ -63,8 +63,6 @@ public class Inventory
         dataManager = GameManager.Inst.ItemData;// 데이터 메니저 캐싱해놓기
     }
 
-    //인벤토리에 아이템 추가하기, 특정 슬롯에 추가하기
-
     /// <summary>
     /// 아이템을 1개 추가하는 함수
     /// </summary>
@@ -100,9 +98,60 @@ public class Inventory
         return result;
     }
 
+    /// <summary>
+    /// 아이템을 1개 추가하는 함수
+    /// </summary>
+    /// <param name="code">추가될 아이템의 enum</param>
+    /// <returns>성공여부(true면 추가, false 추가실패)</returns>
     public bool AddItem(ItemCode code)
     {
         return AddItem(dataManager[code]);
+    }
+
+    /// <summary>
+    /// 아이템을 인벤토리의 특정 슬롯에 1개 추가하는 함수
+    /// </summary>
+    /// <param name="data">추가할 아이템 데이터</param>
+    /// <param name="index">아이템이 추가될 인덱스</param>
+    /// <returns>true면 성공, false면 실패</returns>
+    public bool AddItem(ItemData data, uint index)
+    {
+        bool result = false;
+                
+        if(IsValidIndex(index)) // 적절한 인덱스인지 확인
+        {
+            ItemSlot slot = slots[index];  // index에 해당하는 슬롯 찾아오기
+
+            if (slot.IsEmpty)
+            {
+                // 슬롯이 비어있으면 그냥 추가
+                slot.AssignSlotItem(data);
+            }
+            else
+            {
+                // 슬롯이 비어있지 않다.
+                if (slot.ItemData == data)
+                {
+                    result = slot.IncreaseSlotItem(out uint _); // 같은 아이템이면 증가 시도
+                }
+                else
+                {
+                    // 다른 아이템이면 그냥 실패
+                    Debug.Log($"실패 : 인벤토리 {index}번 슬롯에 다른 아이템이 들어있습니다.");
+                }
+            }
+        }
+        else
+        {
+            Debug.Log($"실패 : {index}번은 잘못된 인덱스입니다.");
+        }
+
+        return result;
+    }
+
+    public bool AddItem(ItemCode code, uint index)
+    {
+        return AddItem(dataManager[code], index);
     }
 
     //인벤토리 특정 슬롯에서 일정 갯수만큼 아이템 제거하기
@@ -136,6 +185,10 @@ public class Inventory
     {
 
     }
+
+    // 단순 확인 및 탐색용 함수들 -------------------------------------------------------------------
+
+    private bool IsValidIndex(uint index) => (index < SlotCount) || (index == TempSlotIndex);
 
     /// <summary>
     /// 비어있는 슬롯을 찾아주는 함수
@@ -173,5 +226,10 @@ public class Inventory
             }
         }
         return findSlot;
+    }
+
+    public void PrintInventory()
+    {
+        // 출력 예시 : [ 루비(1), 사파이어(1), 에메랄드(2), (빈칸), (빈칸), (빈칸) ]
     }
 }
