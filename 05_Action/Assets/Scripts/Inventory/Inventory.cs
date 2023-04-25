@@ -149,35 +149,68 @@ public class Inventory
         return result;
     }
 
+    /// <summary>
+    /// 아이템을 인벤토리의 특정 슬롯에 1개 추가하는 함수
+    /// </summary>
+    /// <param name="code">추가할 아이템 enum코드</param>
+    /// <param name="index">아이템이 추가될 인덱스</param>
+    /// <returns>true면 성공, false면 실패</returns>
     public bool AddItem(ItemCode code, uint index)
     {
         return AddItem(dataManager[code], index);
     }
 
-    //인벤토리 특정 슬롯에서 일정 갯수만큼 아이템 제거하기
-    void RemoveItem()
+    /// <summary>
+    /// 인벤토리 특정 슬롯에서 일정 갯수만큼 아이템 제거하는 함수
+    /// </summary>
+    /// <param name="slotIndex">제거할 슬롯 인덱스</param>
+    /// <param name="decreaseCount">감소시킬 갯수</param>
+    public void RemoveItem(uint slotIndex, uint decreaseCount = 1)
     {
-
+        if(IsValidIndex(slotIndex))
+        {
+            ItemSlot slot = slots[slotIndex];
+            slot.DecreaseSlotItem(decreaseCount);
+        }
+        else
+        {
+            Debug.Log($"실패 : {slotIndex}는 잘못된 인덱스입니다.");
+        }
     }
-
+    
+    
     /// <summary>
     /// 특정 슬롯에서 아이템을 완전히 제거하는 함수
     /// </summary>
-    void ClearSlot()
+    /// <param name="slotIndex">제거할 슬롯 인덱스</param>
+    public void ClearSlot(uint slotIndex)
     {
-
+        if(IsValidIndex(slotIndex))
+        {
+            ItemSlot slot = slots[slotIndex];
+            slot.ClearSlotItem();
+        }
+        else
+        {
+            Debug.Log($"실패 : {slotIndex}는 잘못된 인덱스입니다.");
+        }
     }
 
-    //인벤토리를 전부 비우기
-    void ClearInventory()
+    /// <summary>
+    /// 인벤토리를 전부 비우는 함수
+    /// </summary>
+    public void ClearInventory()
     {
-
+        foreach(var slot in slots)
+        {
+            slot.ClearSlotItem();
+        }
     }
 
     //아이템 이동 시키기 
-    void MoveItem()
+    public void MoveItem(uint from, uint to)
     {
-
+        // 발생할 수 있는 경우의 수
     }
 
     //아이템 정렬
@@ -228,8 +261,38 @@ public class Inventory
         return findSlot;
     }
 
+    /// <summary>
+    /// 테스트 확인용 함수
+    /// </summary>
     public void PrintInventory()
     {
         // 출력 예시 : [ 루비(1), 사파이어(1), 에메랄드(2), (빈칸), (빈칸), (빈칸) ]
+        string printText = "[ ";
+
+        for(int i =0;i<SlotCount-1;i++)
+        {
+            if (!slots[i].IsEmpty)
+            {
+                printText += $"{slots[i].ItemData.itemName}({slots[i].ItemCount})";
+            }
+            else
+            {
+                printText += "(빈칸)";
+            }
+            printText += ", ";
+        }
+
+        ItemSlot last = slots[SlotCount - 1];
+        if( !last.IsEmpty)
+        {
+            printText += $"{last.ItemData.itemName}({last.ItemCount})";
+        }
+        else
+        {
+            printText += "(빈칸)";
+        }
+        printText += " ]";
+
+        Debug.Log(printText);
     }
 }

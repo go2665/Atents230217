@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 
 public class Test_Inventory : Test_Base
 {
+    public ItemCode code = ItemCode.Ruby;
+    public int index = 0;
+
     Inventory inventory;
 
     private void Start()
@@ -14,21 +17,28 @@ public class Test_Inventory : Test_Base
 
     protected override void Test1(InputAction.CallbackContext _)
     {
-        inventory.AddItem(ItemCode.Ruby);
+        uint temp = (uint)Mathf.Clamp(index, 0, inventory.SlotCount);
+        inventory.AddItem(code, temp);
+        inventory.PrintInventory();
     }
 
     protected override void Test2(InputAction.CallbackContext _)
     {
-        inventory.AddItem(ItemCode.Emerald, 5);
+        uint temp = (uint)Mathf.Clamp(index, 0, inventory.SlotCount);
+        inventory.RemoveItem(temp);
+        inventory.PrintInventory();
     }
 
     protected override void Test3(InputAction.CallbackContext _)
     {
-        inventory.AddItem(ItemCode.Sapphire);
+        uint temp = (uint)Mathf.Clamp(index, 0, inventory.SlotCount);
+        inventory.ClearSlot(temp);
+        inventory.PrintInventory();
     }
 
-    protected override void Test4(InputAction.CallbackContext _)
+    protected override void Test5(InputAction.CallbackContext _)
     {
+        inventory.ClearInventory();
         inventory.PrintInventory();
     }
 }
