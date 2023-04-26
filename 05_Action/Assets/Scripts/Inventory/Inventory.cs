@@ -245,14 +245,16 @@ public class Inventory
     }
 
     //아이템 정렬
-    public void SlotSorting(ItemSortBy sortBy)
+    public void SlotSorting(ItemSortBy sortBy, bool isAscending = true)
     {
+        // 정렬할 리스트 만들기
         List<ItemSlot> sortSlots = new List<ItemSlot>(SlotCount);
         foreach(var slot in slots )
         {
             sortSlots.Add(slot);
         }
 
+        // 파라메터에서 설정한 기준에 따라 정렬
         switch(sortBy)
         {
             case ItemSortBy.Name:
@@ -270,7 +272,18 @@ public class Inventory
                 });
                 break;
             case ItemSortBy.Price:
-                sortSlots.Sort((x, y) => x.ItemData.price.CompareTo(y.ItemData.price));
+                sortSlots.Sort((x, y) =>
+                {
+                    if (x.ItemData == null)
+                    {
+                        return 1;
+                    }
+                    if (y.ItemData == null)
+                    {
+                        return -1;
+                    }
+                    return x.ItemData.price.CompareTo(y.ItemData.price);
+                });
                 break;
             case ItemSortBy.ID:
             default:
@@ -289,20 +302,19 @@ public class Inventory
                 break;
         }
 
-        List<uint> fromList = new List<uint>(SlotCount);
-        List<uint> toList = new List<uint>(SlotCount);
 
-        uint index = 0;
+        // 정렬된 결과에 따라 슬롯 순서 조절하기
+        List<(ItemData, uint)> sortedData = new List<(ItemData, uint)>(SlotCount);
         foreach (var slot in sortSlots)
         {
-            fromList.Add(index);
-            toList.Add(slot.Index);
-            index++;
+            sortedData.Add((slot.ItemData, slot.ItemCount));
         }
 
-        for(int i=0;i<SlotCount;i++)
+        int index = 0;
+        foreach (var data in sortedData)
         {
-            MoveItem(fromList[i], toList[i]);
+            slots[index].AssignSlotItem(data.Item1, data.Item2);
+            index++;
         }
     }
 

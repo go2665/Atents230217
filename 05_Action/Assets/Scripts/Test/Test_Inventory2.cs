@@ -34,4 +34,10 @@ public class Test_Inventory2 : Test_Base
         inventory.PrintInventory();
     }
 
+    protected override void Test2(InputAction.CallbackContext _)
+    {
+        inventory.MoveItem(from, to);
+        inventory.PrintInventory();
+    }
+
 }
