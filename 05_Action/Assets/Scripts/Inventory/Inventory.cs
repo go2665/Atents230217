@@ -213,8 +213,10 @@ public class Inventory
     /// <param name="from">시작 슬롯의 인덱스</param>
     /// <param name="to">도착 슬롯의 인덱스</param>
     public void MoveItem(uint from, uint to)
-    {        
-        if( IsValidIndex(from) && IsValidIndex(to) )    // from과 to 모두 valid해야 한다.
+    {
+        // from과 to가 같은 경우는 스킵
+        // from과 to 모두 valid해야 한다.
+        if ( (from != to) &&  IsValidIndex(from) && IsValidIndex(to) )    
         {
             // temp슬롯을 감안해서 삼항연산자로 슬롯 구하기.
             ItemSlot fromSlot = (from == TempSlotIndex) ? TempSlot : slots[from];
@@ -243,9 +245,65 @@ public class Inventory
     }
 
     //아이템 정렬
-    void SlotSorting()
+    public void SlotSorting(ItemSortBy sortBy)
     {
+        List<ItemSlot> sortSlots = new List<ItemSlot>(SlotCount);
+        foreach(var slot in slots )
+        {
+            sortSlots.Add(slot);
+        }
 
+        switch(sortBy)
+        {
+            case ItemSortBy.Name:
+                sortSlots.Sort((x, y) =>
+                {
+                    if(x.ItemData == null)
+                    {
+                        return 1;
+                    }
+                    if(y.ItemData == null)
+                    {
+                        return -1;
+                    }
+                    return x.ItemData.itemName.CompareTo(y.ItemData.itemName);
+                });
+                break;
+            case ItemSortBy.Price:
+                sortSlots.Sort((x, y) => x.ItemData.price.CompareTo(y.ItemData.price));
+                break;
+            case ItemSortBy.ID:
+            default:
+                sortSlots.Sort((x, y) =>
+                {
+                    if (x.ItemData == null)
+                    {
+                        return 1;
+                    }
+                    if (y.ItemData == null)
+                    {
+                        return -1;
+                    }
+                    return x.ItemData.id.CompareTo(y.ItemData.id);
+                });
+                break;
+        }
+
+        List<uint> fromList = new List<uint>(SlotCount);
+        List<uint> toList = new List<uint>(SlotCount);
+
+        uint index = 0;
+        foreach (var slot in sortSlots)
+        {
+            fromList.Add(index);
+            toList.Add(slot.Index);
+            index++;
+        }
+
+        for(int i=0;i<SlotCount;i++)
+        {
+            MoveItem(fromList[i], toList[i]);
+        }
     }
 
     // 단순 확인 및 탐색용 함수들 -------------------------------------------------------------------
