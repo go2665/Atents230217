@@ -10,6 +10,7 @@ public class Test_Inventory2 : Test_Base
     public uint from = 0;
     public uint to = 1;
     public ItemSortBy sortBy = ItemSortBy.ID;
+    public bool isAscending = true;
 
     Inventory inventory;
 
@@ -30,7 +31,7 @@ public class Test_Inventory2 : Test_Base
 
     protected override void Test1(InputAction.CallbackContext _)
     {
-        inventory.SlotSorting(sortBy);
+        inventory.SlotSorting(sortBy, isAscending);
         inventory.PrintInventory();
     }
 

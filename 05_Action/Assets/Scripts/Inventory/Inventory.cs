@@ -245,6 +245,11 @@ public class Inventory
     }
 
     //아이템 정렬
+    /// <summary>
+    /// 아이템 정렬용 함수
+    /// </summary>
+    /// <param name="sortBy">정렬 기준</param>
+    /// <param name="isAscending">true면 오름차순, false면 내림차순</param>
     public void SlotSorting(ItemSortBy sortBy, bool isAscending = true)
     {
         // 정렬할 리스트 만들기
@@ -260,15 +265,22 @@ public class Inventory
             case ItemSortBy.Name:
                 sortSlots.Sort((x, y) =>
                 {
-                    if(x.ItemData == null)
+                    if(x.ItemData == null)  
                     {
-                        return 1;
+                        return 1;       // x가 null이면 x가 크다.
                     }
                     if(y.ItemData == null)
                     {
-                        return -1;
+                        return -1;      // y가 null이면 y가 크다.
                     }
-                    return x.ItemData.itemName.CompareTo(y.ItemData.itemName);
+                    if (isAscending)
+                    {
+                        return x.ItemData.itemName.CompareTo(y.ItemData.itemName);  // 디폴트로 오름차순
+                    }
+                    else
+                    {
+                        return y.ItemData.itemName.CompareTo(x.ItemData.itemName);  // 내림차순으로 처리
+                    }
                 });
                 break;
             case ItemSortBy.Price:
@@ -282,7 +294,14 @@ public class Inventory
                     {
                         return -1;
                     }
-                    return x.ItemData.price.CompareTo(y.ItemData.price);
+                    if (isAscending)
+                    {
+                        return x.ItemData.price.CompareTo(y.ItemData.price);
+                    }
+                    else
+                    {
+                        return y.ItemData.price.CompareTo(x.ItemData.price);
+                    }
                 });
                 break;
             case ItemSortBy.ID:
@@ -297,22 +316,30 @@ public class Inventory
                     {
                         return -1;
                     }
-                    return x.ItemData.id.CompareTo(y.ItemData.id);
+                    if (isAscending)
+                    {
+                        return x.ItemData.id.CompareTo(y.ItemData.id);
+                    }
+                    else
+                    {
+                        return y.ItemData.id.CompareTo(x.ItemData.id);
+                    }
                 });
                 break;
         }
-
 
         // 정렬된 결과에 따라 슬롯 순서 조절하기
         List<(ItemData, uint)> sortedData = new List<(ItemData, uint)>(SlotCount);
         foreach (var slot in sortSlots)
         {
-            sortedData.Add((slot.ItemData, slot.ItemCount));
+            // 아이템 데이터와 아이템 갯수를 정렬 순서에 맞춰서 리스트에 저장하기
+            sortedData.Add((slot.ItemData, slot.ItemCount));    
         }
 
         int index = 0;
         foreach (var data in sortedData)
         {
+            // 저장해 놓은 데이터에 따라 슬롯에 아이템 설정
             slots[index].AssignSlotItem(data.Item1, data.Item2);
             index++;
         }
