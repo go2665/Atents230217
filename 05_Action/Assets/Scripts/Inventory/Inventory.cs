@@ -207,10 +207,39 @@ public class Inventory
         }
     }
 
-    //아이템 이동 시키기 
+    /// <summary>
+    /// 아이템을 이동 시키는 함수
+    /// </summary>
+    /// <param name="from">시작 슬롯의 인덱스</param>
+    /// <param name="to">도착 슬롯의 인덱스</param>
     public void MoveItem(uint from, uint to)
-    {
-        // 발생할 수 있는 경우의 수
+    {        
+        if( IsValidIndex(from) && IsValidIndex(to) )    // from과 to 모두 valid해야 한다.
+        {
+            // temp슬롯을 감안해서 삼항연산자로 슬롯 구하기.
+            ItemSlot fromSlot = (from == TempSlotIndex) ? TempSlot : slots[from];
+            if( !fromSlot.IsEmpty ) // from이 빈 경우는 처리 안함(실질적으로 사용안함)
+            {
+                ItemSlot toSlot = (to == TempSlotIndex) ? TempSlot : slots[to];
+
+                if( fromSlot.ItemData == toSlot.ItemData )  
+                {
+                    // from과 to가 같은 아이템인 경우. 아이템 합치기
+                    toSlot.IncreaseSlotItem(out uint overCount, fromSlot.ItemCount );
+                    fromSlot.DecreaseSlotItem(fromSlot.ItemCount - overCount);
+                    Debug.Log($"인벤토리의 {from}슬롯에서 {to}슬롯으로 아이템 합치기 성공");
+                }
+                else
+                {
+                    // from과 to가 다른 아이템인 경우. 서로 스왑하기
+                    ItemData tempData = fromSlot.ItemData;
+                    uint tempCount = fromSlot.ItemCount;
+                    fromSlot.AssignSlotItem(toSlot.ItemData, toSlot.ItemCount);
+                    toSlot.AssignSlotItem(tempData, tempCount);
+                    Debug.Log($"인벤토리의 {from}슬롯과 {to}슬롯의 아이템 교체 성공");
+                }
+            }
+        }
     }
 
     //아이템 정렬

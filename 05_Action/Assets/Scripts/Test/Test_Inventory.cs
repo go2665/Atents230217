@@ -7,12 +7,23 @@ public class Test_Inventory : Test_Base
 {
     public ItemCode code = ItemCode.Ruby;
     public int index = 0;
+    public uint from = 0;
+    public uint to = 1;
 
     Inventory inventory;
 
     private void Start()
     {
         inventory = new Inventory(6);
+        inventory.AddItem(ItemCode.Ruby);
+        inventory.AddItem(ItemCode.Ruby);
+        inventory.AddItem(ItemCode.Ruby, 1);
+        inventory.AddItem(ItemCode.Emerald,2);
+        inventory.AddItem(ItemCode.Emerald,2);
+        inventory.AddItem(ItemCode.Emerald,2);
+        inventory.AddItem(ItemCode.Sapphire,5);
+        inventory.AddItem(ItemCode.Sapphire,5);
+        inventory.PrintInventory();
     }
 
     protected override void Test1(InputAction.CallbackContext _)
@@ -33,6 +44,12 @@ public class Test_Inventory : Test_Base
     {
         uint temp = (uint)Mathf.Clamp(index, 0, inventory.SlotCount);
         inventory.ClearSlot(temp);
+        inventory.PrintInventory();
+    }
+
+    protected override void Test4(InputAction.CallbackContext _)
+    {
+        inventory.MoveItem(from, to);
         inventory.PrintInventory();
     }
 
