@@ -259,6 +259,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UI",
+            "id": "d5f53c5d-4df2-47bb-a322-cd6d512280af",
+            "actions": [
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "2945a8e1-9a67-417e-9cb7-79c633f8d54d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "171949b5-dc01-4881-b103-bc1a5fa86af4",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
