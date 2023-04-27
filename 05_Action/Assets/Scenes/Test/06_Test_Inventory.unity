@@ -1202,7 +1202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb842b04487b0f348b263aa1485a5b43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  invenSize: 8
+  invenSize: 6
   inventoryUI: {fileID: 1992361678}
   code: 0
   index: 0
@@ -1641,6 +1641,16 @@ PrefabInstance:
     - target: {fileID: 6487460181313972051, guid: e4ea1052029040b4d8a74af30d121032,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6902797231065995178, guid: e4ea1052029040b4d8a74af30d121032,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6902797231065995178, guid: e4ea1052029040b4d8a74af30d121032,
+        type: 3}
+      propertyPath: m_Color.a
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
