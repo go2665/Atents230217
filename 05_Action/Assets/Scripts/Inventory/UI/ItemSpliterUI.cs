@@ -21,10 +21,12 @@ public class ItemSpliterUI : MonoBehaviour
         get => itemSplitCount;
         set
         {
-            if(itemSplitCount != value)
-            {
-                itemSplitCount = value;
-            }
+            // 숫자 입력됬을 때 1~최대치까지로 조절
+            itemSplitCount = (uint)Mathf.Clamp((int)value, itemCountMin, (int)(targetSlot.ItemCount - 1));
+
+            // 인풋필드와 슬라이더에도 반영
+            inputField.text = itemSplitCount.ToString();
+            slider.value = itemSplitCount;
         }
     }
 
@@ -56,19 +58,63 @@ public class ItemSpliterUI : MonoBehaviour
 
     private void Awake()
     {
-        // 1. awake에서 필요한 컴포넌트 찾기
-        // 2. 인풋필드와 슬라이더를 연동시키기(하나가 바뀌면 다른 하나도 같이 변경되어야 한다.)
-        // 3. OK 버튼을 누르면 ItemSplitCount를 디버그 창에 출력하기
-        // 4. Cancel 버튼을 누르면 "취소"라고 디버그 창에 출력하기
+        // 인풋 필드
+        inputField = GetComponentInChildren<TMP_InputField>();
+        inputField.onValueChanged.AddListener((text) =>
+        {
+            if( uint.TryParse(text, out uint result) )
+            {
+                ItemSplitCount = result;
+            }
+            else
+            {
+                ItemSplitCount = itemCountMin;
+            }
+        });
+
+        // 슬라이더
+        slider = GetComponentInChildren<Slider>();
+        slider.onValueChanged.AddListener((value) => ItemSplitCount = (uint)value);
+
+        // 아이템 아이콘 이미지
+        Transform child = transform.GetChild(0);
+        itemImage = child.GetComponent<Image>();
+
+        // 더하기 버튼
+        child = transform.GetChild(2);
+        Button plus = child.GetComponent<Button>();
+        plus.onClick.AddListener(() => ItemSplitCount++);
+
+        // 마이너스 버튼
+        child = transform.GetChild(3);
+        Button minus = child.GetComponent<Button>();
+        minus.onClick.AddListener(() => ItemSplitCount--);
+
+        // OK 버튼
+        child = transform.GetChild(5);
+        Button ok = child.GetComponent<Button>();
+        ok.onClick.AddListener(() => Debug.Log($"{ItemSplitCount} 만큼 나눈다."));
+
+        // 취소 버튼
+        child = transform.GetChild(6);
+        Button cancel = child.GetComponent<Button>();
+        cancel.onClick.AddListener( () => Debug.Log("취소"));
     }
 
+    /// <summary>
+    /// 아이템 분리창을 여는 함수
+    /// </summary>
+    /// <param name="target">아이템을 분리할 슬롯</param>
     public void Open(ItemSlot target)
     {
-        targetSlot = target;
-        ItemSplitCount = 1;
-        itemImage.sprite = targetSlot.ItemData.itemIcon;
-        slider.minValue = itemCountMin;
-        slider.maxValue = target.ItemCount - 1;
-        gameObject.SetActive(true);
+        if(target.ItemCount > itemCountMin) // 최소치보다 클때만 분리작업 수행
+        {
+            targetSlot = target;                    // 슬롯 저장
+            ItemSplitCount = itemCountMin;          // 기본 값 설정
+            itemImage.sprite = targetSlot.ItemData.itemIcon;    // 아이콘 설정
+            slider.minValue = itemCountMin;         // 슬라이더 범위 지정
+            slider.maxValue = target.ItemCount - 1;
+            gameObject.SetActive(true);             // 보여주기
+        }
     }
 }
