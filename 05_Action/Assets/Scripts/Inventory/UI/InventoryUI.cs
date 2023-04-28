@@ -102,6 +102,7 @@ public class InventoryUI : MonoBehaviour
             slotUIs[i].onClick += OnSlotClick;
             slotUIs[i].onPointerEnter += OnItemDetailOn;
             slotUIs[i].onPointerExit += OnItemDetailOff;
+            slotUIs[i].onPointerMove += OnSlotPointerMove;
         }
         // 임시 슬롯 초기화
         tempSlotUI.InitializeSlot(Inventory.TempSlotIndex, inven.TempSlot); // 임시슬롯도 초기화
@@ -164,6 +165,15 @@ public class InventoryUI : MonoBehaviour
     private void OnItemDetailOff(uint slotID)
     {
         detail.Close();
+    }
+
+    /// <summary>
+    /// 마우스가 슬롯안에서 움직일 때 실행되는 함수
+    /// </summary>
+    /// <param name="screenPos">마우스 커서의 스크린 좌표</param>
+    private void OnSlotPointerMove(Vector2 screenPos)
+    {
+        detail.MovePosition(screenPos); // 디테일 창 이동시키기
     }
 
 }

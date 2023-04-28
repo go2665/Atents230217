@@ -33,6 +33,11 @@ public class ItemSlotUI : ItemSlotUI_Base, IDragHandler, IBeginDragHandler, IEnd
     public Action<uint> onPointerExit;
 
     /// <summary>
+    /// 슬롯 위에서 마우스가 움직일 때 실행되는 델리게이트
+    /// </summary>
+    public Action<Vector2> onPointerMove;
+
+    /// <summary>
     /// 이 슬롯UI를 초기화하는 함수
     /// </summary>
     /// <param name="id">이 슬롯UI의 ID</param>
@@ -45,6 +50,7 @@ public class ItemSlotUI : ItemSlotUI_Base, IDragHandler, IBeginDragHandler, IEnd
         onClick = null;
         onPointerEnter = null;
         onPointerExit = null;
+        onPointerMove = null;
 
         // 부모가 처리하는 것
         base.InitializeSlot(id, slot);
@@ -115,10 +121,12 @@ public class ItemSlotUI : ItemSlotUI_Base, IDragHandler, IBeginDragHandler, IEnd
         onPointerExit?.Invoke(ID);
     }
 
+    /// <summary>
+    /// 슬롯 위에서 움직임이 있었던 것을 인벤토리UI에 전달하는 것이 주 목적
+    /// </summary>
+    /// <param name="eventData"></param>
     public void OnPointerMove(PointerEventData eventData)
     {
-        throw new NotImplementedException();
-        // 1. 디테일창의 위치는 기본적으로 마우스 위치가 디테일창의 왼쪽 아래가 되도록 설정해야 한다.
-        // 2. 디테일창이 화면 밖으로 일부라도 벗어나면 마우스 위치가 디테일창의 오른쪽 아래가 되도록 설정해야 한다.
+        onPointerMove?.Invoke(eventData.position);
     }
 }
