@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class DetailWindow : MonoBehaviour
 {
+    public float alphaChangeSpeed = 5.0f;
+    float alphaTarget = 0.0f;
+
     bool isPause = false;
     public bool IsPause
     {
@@ -31,6 +34,7 @@ public class DetailWindow : MonoBehaviour
     private void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
+        canvasGroup.alpha = 0;
         Transform child = transform.GetChild(0);
         itemIcon = child.GetComponent<Image>();
         child = transform.GetChild(1);
@@ -39,6 +43,19 @@ public class DetailWindow : MonoBehaviour
         itemPrice = child.GetComponent<TextMeshProUGUI>();
         child = transform.GetChild(3);
         itemDescription = child.GetComponent<TextMeshProUGUI>();
+    }
+
+    private void Update()
+    {
+        if( alphaTarget > 0.0f )
+        {
+            canvasGroup.alpha += Time.deltaTime * alphaChangeSpeed;
+        }
+        else
+        {
+            canvasGroup.alpha -= Time.deltaTime * alphaChangeSpeed;
+        }
+        canvasGroup.alpha = Mathf.Clamp(canvasGroup.alpha, 0.0f, 1.0f);
     }
 
     public void Open(ItemData data)
@@ -50,13 +67,13 @@ public class DetailWindow : MonoBehaviour
             itemPrice.text = data.price.ToString();
             itemDescription.text = data.itemDescription;
 
-            canvasGroup.alpha = 1;
+            alphaTarget = 1;
         }
     }
 
     public void Close()
     {
-        canvasGroup.alpha = 0;
+        alphaTarget = 0;
     }
 
     /// <summary>
