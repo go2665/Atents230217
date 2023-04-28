@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ItemSlotUI : ItemSlotUI_Base, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
+public class ItemSlotUI : ItemSlotUI_Base, IDragHandler, IBeginDragHandler, IEndDragHandler, 
+    IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
 {
     /// <summary>
     /// 드래그 시작을 알리는 델리게이트
@@ -22,6 +23,16 @@ public class ItemSlotUI : ItemSlotUI_Base, IDragHandler, IBeginDragHandler, IEnd
     public Action<uint> onClick;
 
     /// <summary>
+    /// 슬롯에 마우스가 들어왔을 때 실행되는 델리게이트
+    /// </summary>
+    public Action<uint> onPointerEnter;
+
+    /// <summary>
+    /// 슬롯에서 마우스가 나갔을 때 실행되는 델리게이트
+    /// </summary>
+    public Action<uint> onPointerExit;
+
+    /// <summary>
     /// 이 슬롯UI를 초기화하는 함수
     /// </summary>
     /// <param name="id">이 슬롯UI의 ID</param>
@@ -31,6 +42,9 @@ public class ItemSlotUI : ItemSlotUI_Base, IDragHandler, IBeginDragHandler, IEnd
         // 델리게이트에 이전 영향 제거하기
         onDragBegin = null; 
         onDragEnd = null;
+        onClick = null;
+        onPointerEnter = null;
+        onPointerExit = null;
 
         // 부모가 처리하는 것
         base.InitializeSlot(id, slot);
@@ -81,5 +95,30 @@ public class ItemSlotUI : ItemSlotUI_Base, IDragHandler, IBeginDragHandler, IEnd
     public void OnPointerClick(PointerEventData eventData)
     {
         onClick?.Invoke(ID);    // 클릭되었다고 신호만 보내기
+    }
+
+    /// <summary>
+    /// 상세 정보창 열고 닫는 것이 주 목적
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        onPointerEnter?.Invoke(ID);
+    }
+
+    /// <summary>
+    /// 상세 정보창 열고 닫는 것이 주 목적
+    /// </summary>
+    /// <param name="eventData"></param>
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        onPointerExit?.Invoke(ID);
+    }
+
+    public void OnPointerMove(PointerEventData eventData)
+    {
+        throw new NotImplementedException();
+        // 1. 디테일창의 위치는 기본적으로 마우스 위치가 디테일창의 왼쪽 아래가 되도록 설정해야 한다.
+        // 2. 디테일창이 화면 밖으로 일부라도 벗어나면 마우스 위치가 디테일창의 오른쪽 아래가 되도록 설정해야 한다.
     }
 }
