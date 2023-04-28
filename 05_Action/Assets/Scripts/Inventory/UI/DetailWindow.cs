@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class DetailWindow : MonoBehaviour
 {
@@ -58,22 +58,31 @@ public class DetailWindow : MonoBehaviour
         canvasGroup.alpha = Mathf.Clamp(canvasGroup.alpha, 0.0f, 1.0f);
     }
 
+    /// <summary>
+    /// 상세창을 여는 함수
+    /// </summary>
+    /// <param name="data">열면서 표시할 데이터</param>
     public void Open(ItemData data)
     {
-        if(!isPause && data != null)
+        if(!isPause && data != null)        // 일시 정지 상태가 아니고 데이터가 있을때만 열기
         {
-            itemIcon.sprite = data.itemIcon;
-            itemName.text = data.itemName;
-            itemPrice.text = data.price.ToString();
-            itemDescription.text = data.itemDescription;
+            itemIcon.sprite = data.itemIcon;                    // 아이콘 이미지 설정
+            itemName.text = data.itemName;                      // 이름 설정
+            itemPrice.text = data.price.ToString();             // 가격 설정
+            itemDescription.text = data.itemDescription;        // 상세 설명 설정
 
-            alphaTarget = 1;
+            alphaTarget = 1;                // 보이게끔 alpha 목표치 설정
+
+            MovePosition(Mouse.current.position.ReadValue());   // 열릴 때 마우스 위치 기준으로 열기
         }
     }
 
+    /// <summary>
+    /// 상세창을 닫는 함수
+    /// </summary>
     public void Close()
     {
-        alphaTarget = 0;
+        alphaTarget = 0;    // 안보이게끔 alpha 목표치 설정
     }
 
     /// <summary>
@@ -82,7 +91,7 @@ public class DetailWindow : MonoBehaviour
     /// <param name="screenPos">새 위치(스크린 좌표)</param>
     public void MovePosition(Vector2 screenPos)
     {
-        if (canvasGroup.alpha > 0)  // 보일때만 움직이게 하기
+        if (alphaTarget > 0)                // 보일때만 움직이게 하기
         {
             RectTransform rect = (RectTransform)transform;
 
