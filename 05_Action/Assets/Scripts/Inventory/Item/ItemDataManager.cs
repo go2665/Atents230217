@@ -11,7 +11,7 @@ public enum ItemCode
 
 public enum ItemSortBy
 {
-    ID,     // ID 기준으로 정렬
+    Code,   // 코드 기준으로 정렬
     Name,   // 이름 기준
     Price   // 가격 기준
 }
