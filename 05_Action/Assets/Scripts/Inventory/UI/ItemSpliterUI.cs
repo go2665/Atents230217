@@ -103,7 +103,7 @@ public class ItemSpliterUI : MonoBehaviour
         // 취소 버튼
         child = transform.GetChild(6);
         Button cancel = child.GetComponent<Button>();
-        cancel.onClick.AddListener(() => Close()); ;
+        cancel.onClick.AddListener(Close);
     }
 
     /// <summary>
@@ -126,7 +126,7 @@ public class ItemSpliterUI : MonoBehaviour
     /// <summary>
     /// 아이템 분리창을 닫는 함수
     /// </summary>
-    private void Close()
+    public void Close()
     {
         gameObject.SetActive(false);
     }

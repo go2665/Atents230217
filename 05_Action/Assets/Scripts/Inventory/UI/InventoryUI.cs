@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
@@ -37,6 +38,7 @@ public class InventoryUI : MonoBehaviour
     ItemSpliterUI spliter;
 
     PlayerInputActions inputActions;
+    bool isShiftPress = false;
 
     private void Awake()
     {
@@ -56,10 +58,14 @@ public class InventoryUI : MonoBehaviour
     private void OnEnable()
     {
         inputActions.UI.Enable();
+        inputActions.UI.Shift.performed += OnShiftPress;
+        inputActions.UI.Shift.canceled += OnShiftPress;
     }
 
     private void OnDisable()
     {
+        inputActions.UI.Shift.canceled -= OnShiftPress;
+        inputActions.UI.Shift.performed -= OnShiftPress;
         inputActions.UI.Disable();
     }
 
@@ -119,6 +125,9 @@ public class InventoryUI : MonoBehaviour
 
         // 상세정보창 닫아 놓기
         detail.Close();
+
+        // 분리창 닫기
+        spliter.Close();
     }
 
     /// <summary>
@@ -158,9 +167,23 @@ public class InventoryUI : MonoBehaviour
     {
         if( !tempSlotUI.ItemSlot.IsEmpty )      
         {
-            // 클릭되어 있지 않으면 드래그가 끝난 것과 같은 처리
-            // 임시슬롯과 클릭된슬롯의 내용을 서로 교체
-            OnItemMoveEnd(slotID, true);              
+            // 임시 슬롯이 비어있지 않을 때(=드래그 끝났을 때 다른 아이템이 있어서 교체 후 들고 있는 상황)
+            // 이때는 드래그가 끝났을 때와 똑같이 처리한다.
+
+            OnItemMoveEnd(slotID, true);    // 임시슬롯과 클릭된 슬롯의 내용을 서로 교체
+        }
+        else
+        {
+            // 임시 슬롯이 비어있는데 클릭했다.
+            if( isShiftPress)
+            {
+                // 아이템 분리 용도로 클릭했다.
+                OnSplitOpen(slotID);                
+            }
+            else
+            {
+                // 아이템 사용 용도로 클릭했다.
+            }
         }
     }
 
@@ -201,6 +224,18 @@ public class InventoryUI : MonoBehaviour
     }
 
     /// <summary>
+    /// 아이템 분리창 여는 함수
+    /// </summary>
+    /// <param name="slotID">아이템을 분리할 슬롯의 ID</param>
+    private void OnSplitOpen(uint slotID)
+    {
+        ItemSlotUI targetSlotUI = slotUIs[slotID];  // transform이 필요해서 ItemSlotUI 가져옴
+        spliter.transform.position = targetSlotUI.transform.position + Vector3.up * 100;    // 슬롯의 위쪽에 배치
+        spliter.Open(targetSlotUI.ItemSlot);        // 분리창 열기
+        detail.IsPause = true;                      // 디테일창 일시 정지 시키기.(내부에서 알아서 닫음)
+    }
+
+    /// <summary>
     /// 아이템 분리창에서 OK버튼이 눌러졌을 때 실행되는 함수
     /// </summary>
     /// <param name="slotID">아이템을 분리할 슬롯의 아이디</param>
@@ -209,6 +244,15 @@ public class InventoryUI : MonoBehaviour
     {
         inven.SplitItem(slotID, count);
         tempSlotUI.Open();
+    }
+
+    /// <summary>
+    /// 쉬프트키를 눌렀을 때 실행되는 함수
+    /// </summary>
+    /// <param name="context"></param>
+    private void OnShiftPress(InputAction.CallbackContext context)
+    {
+        isShiftPress = !context.canceled;
     }
 
     /// <summary>
