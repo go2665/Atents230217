@@ -42,4 +42,16 @@ public class TempItemSlotUI : ItemSlotUI_Base
         onTempSlotOpenClose?.Invoke(false); // 닫혔다고 알리기
         gameObject.SetActive(false);        // 비활성화 시켜서 보이지 않게 만들고 Update도 실행안되게 하기
     }
+
+    /// <summary>
+    /// 바닥에 아이템을 드랍하는 함수
+    /// </summary>
+    /// <param name="screenPos">마우스 커서의 스크린 좌표</param>
+    public void OnDrop(Vector2 screenPos)
+    {
+        if( !ItemSlot.IsEmpty )
+        {
+            Debug.Log($"아이템 드랍 : {ItemSlot.ItemData.itemName}, {ItemSlot.ItemCount}");
+        }
+    }
 }
