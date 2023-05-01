@@ -93,12 +93,17 @@ public class ItemSpliterUI : MonoBehaviour
         // OK 버튼
         child = transform.GetChild(5);
         Button ok = child.GetComponent<Button>();
-        ok.onClick.AddListener(() => Debug.Log($"{ItemSplitCount} 만큼 나눈다."));
+        ok.onClick.AddListener(() =>
+        {
+            // targetSlot.Index 슬롯에서 ItemSplitCount만큼 덜어내라고 알림
+            onOKClick?.Invoke(targetSlot.Index, ItemSplitCount);
+            Close();
+        });
 
         // 취소 버튼
         child = transform.GetChild(6);
         Button cancel = child.GetComponent<Button>();
-        cancel.onClick.AddListener( () => Debug.Log("취소"));
+        cancel.onClick.AddListener(() => Close()); ;
     }
 
     /// <summary>
@@ -116,5 +121,13 @@ public class ItemSpliterUI : MonoBehaviour
             slider.maxValue = target.ItemCount - 1;
             gameObject.SetActive(true);             // 보여주기
         }
+    }
+
+    /// <summary>
+    /// 아이템 분리창을 닫는 함수
+    /// </summary>
+    private void Close()
+    {
+        gameObject.SetActive(false);
     }
 }
