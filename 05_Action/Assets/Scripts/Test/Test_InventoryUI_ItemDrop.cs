@@ -11,7 +11,7 @@ public class Test_InventoryUI_ItemDrop : Test_Base
     // Start is called before the first frame update
     void Start()
     {
-        inventory = new Inventory(invenSize);
+        inventory = new Inventory(null, invenSize);
         inventoryUI.InitializeInventory(inventory);
         inventory.AddItem(ItemCode.Ruby);
         inventory.AddItem(ItemCode.Ruby);
