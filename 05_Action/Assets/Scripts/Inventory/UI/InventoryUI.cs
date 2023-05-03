@@ -17,6 +17,8 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     Inventory inven;
 
+    public Player Owner => inven.Owner;
+
     /// <summary>
     /// 이 인벤토리 UI에 있는 모든 슬롯UI
     /// </summary>

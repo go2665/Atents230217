@@ -2,12 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class Player : MonoBehaviour
 {
     /// <summary>
     /// 이 플레이어가 가지고 있을 인벤토리
     /// </summary>
     Inventory inven;
+
+    /// <summary>
+    /// 아이템을 줏을 수 있는 거리
+    /// </summary>
+    public float ItemPickupRange = 2.0f;
 
     private void Start()
     {
@@ -27,4 +36,14 @@ public class Player : MonoBehaviour
             inven.AddItem(code);
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Handles.color = Color.blue;
+
+        // 아이템 획득 반경 그리기
+        Handles.DrawWireDisc(transform.position, Vector3.up, ItemPickupRange);        
+    }
+#endif
 }
