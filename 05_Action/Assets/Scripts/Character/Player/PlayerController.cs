@@ -76,6 +76,11 @@ public class PlayerController : MonoBehaviour
     Quaternion targetRotation = Quaternion.identity;
 
     /// <summary>
+    /// 아이템 획득 키가 눌러졌을 때 실행될 델리게이트
+    /// </summary>
+    public Action onItemPickUp;
+
+    /// <summary>
     /// 인풋 액션 인스턴스
     /// </summary>
     PlayerInputActions inputActions;
@@ -101,10 +106,12 @@ public class PlayerController : MonoBehaviour
         inputActions.Player.Move.canceled += OnMove;
         inputActions.Player.MoveModeChange.performed += OnMoveModeChange;
         inputActions.Player.Attack.performed += OnAttack;
+        inputActions.Player.PickUp.performed += OnPickUp;
     }
 
     private void OnDisable()
     {
+        inputActions.Player.PickUp.performed -= OnPickUp;
         inputActions.Player.Attack.performed -= OnAttack;
         inputActions.Player.MoveModeChange.performed -= OnMoveModeChange;
         inputActions.Player.Move.canceled -= OnMove;
@@ -178,4 +185,8 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger(AttackHash);
     }
 
+    private void OnPickUp(InputAction.CallbackContext _)
+    {
+        onItemPickUp?.Invoke();
+    }
 }

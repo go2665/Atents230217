@@ -11,5 +11,7 @@ public class Test_Player_ItemDrop : Test_Base
         player.Test_AddItem(ItemCode.Ruby, 3);
         player.Test_AddItem(ItemCode.Emerald, 8);
         player.Test_AddItem(ItemCode.Sapphire, 3);
+
+        ItemFactory.MakeItem(ItemCode.Ruby, 10);
     }
 }
