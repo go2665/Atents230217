@@ -16,6 +16,25 @@ public class Player : MonoBehaviour
     Inventory inven;
 
     /// <summary>
+    /// 플레이어가 가지고 있는 돈
+    /// </summary>
+    int money = 0;
+    public int Money
+    {
+        get => money;
+        set
+        {
+            if(money != value)
+            {
+                money = value;
+                // Debug.Log($"Money : {money}");
+                onMoneyChange?.Invoke(money);
+            }
+        }
+    }
+    public Action<int> onMoneyChange;
+
+    /// <summary>
     /// 아이템을 줏을 수 있는 거리
     /// </summary>
     public float ItemPickupRange = 2.0f;
@@ -44,7 +63,14 @@ public class Player : MonoBehaviour
         foreach (Collider itemCollider in items)
         {
             Item item = itemCollider.gameObject.GetComponent<Item>();
-            if( inven.AddItem(item.ItemData.code) ) // 하나씩 인벤토리에 추가하고
+
+            IConsumable consumable = item.ItemData as IConsumable;  // 즉시 소비되는 아이템인지 확인
+            if(consumable != null)
+            {
+                consumable.Consume(gameObject);     // 즉시 소비되는 아이템이면 바로 사용
+                Destroy(item.gameObject);           // 사용 후 제거
+            }
+            else if ( inven.AddItem(item.ItemData.code) ) // 하나씩 인벤토리에 추가하고
             {
                 Destroy(item.gameObject);           // 성공하면 먹은 아이템 삭제하기
             }
