@@ -51,7 +51,17 @@ public class TempItemSlotUI : ItemSlotUI_Base
     {
         if( !ItemSlot.IsEmpty )
         {
-            Debug.Log($"아이템 드랍 : {ItemSlot.ItemData.itemName}, {ItemSlot.ItemCount}");
+            //Debug.Log($"아이템 드랍 : {ItemSlot.ItemData.itemName}, {ItemSlot.ItemCount}");
+            
+            Ray ray = Camera.main.ScreenPointToRay( screenPos );
+            if( Physics.Raycast(ray, out RaycastHit hit, 1000.0f, LayerMask.GetMask("Ground")) )
+            {
+                Vector3 dropPos = hit.point;
+
+                ItemFactory.MakeItem(ItemSlot.ItemData.code, ItemSlot.ItemCount, dropPos, true);
+                ItemSlot.ClearSlotItem();
+                Close();
+            }
         }
     }
 }
