@@ -15,6 +15,7 @@ public class Test_Player_ItemDrop : Test_Base
         player.Test_AddItem(ItemCode.Ruby, 3);
 
         //ItemFactory.MakeItem(ItemCode.Ruby, 10);
+        player.Money = 999999;
     }
 
     protected override void Test1(InputAction.CallbackContext _)
