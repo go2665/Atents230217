@@ -40,4 +40,15 @@ public class BarBase : MonoBehaviour
         Color bgColor = new Color(color.r, color.g, color.b, color.a * 0.5f);
         bgImage.color = bgColor;
     }
+
+    /// <summary>
+    /// 값이 변경되면 실행되는 함수
+    /// </summary>
+    /// <param name="ratio">슬라이더에서 표시될 비율</param>
+    protected void OnValueChange(float ratio)
+    {
+        ratio = Mathf.Clamp01(ratio);               // ratio의 범위를 0~1 사이로
+        slider.value = ratio;                       // 슬라이더 설정
+        current.text = $"{(ratio * maxValue):f0}";  // 텍스트 변경
+    }
 }

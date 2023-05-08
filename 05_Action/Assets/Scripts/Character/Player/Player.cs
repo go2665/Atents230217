@@ -8,7 +8,7 @@ using System;
 using UnityEditor;
 #endif
 
-public class Player : MonoBehaviour, IHealth
+public class Player : MonoBehaviour, IHealth, IMana
 {
     /// <summary>
     /// 이 플레이어가 가지고 있을 인벤토리
@@ -48,13 +48,16 @@ public class Player : MonoBehaviour, IHealth
         get => hp; 
         set
         {
-            hp = value;
-            if( hp < 0 )
+            if (IsAlive)
             {
-                Die();
-            }            
-            hp = Mathf.Clamp(hp, 0, maxHP);
-            onHealthChange?.Invoke(hp / maxHP);
+                hp = value;
+                if (hp < 0) // 살아있을 때만 죽게 만들기
+                {
+                    Die();
+                }
+                hp = Mathf.Clamp(hp, 0, maxHP);
+                onHealthChange?.Invoke(hp / maxHP);
+            }
         }
     }
 
@@ -73,6 +76,34 @@ public class Player : MonoBehaviour, IHealth
     /// </summary>
     float maxHP = 100.0f;
     public float MaxHP => maxHP;
+
+    /// <summary>
+    /// 플레이어의 현재 MP
+    /// </summary>
+    float mp = 100.0f;
+    public float MP 
+    { 
+        get => mp; 
+        set
+        {
+            if(IsAlive)
+            {
+                mp = Mathf.Clamp(value, 0, maxMP);
+                onManaChange?.Invoke(mp / maxMP);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어의 최대 MP
+    /// </summary>
+    float maxMP = 100.0f;
+    public float MaxMP => maxMP;
+
+    /// <summary>
+    /// 마나가 변경되었을 때 호출될 델리게이트
+    /// </summary>
+    public Action<float> onManaChange { get; set; }
 
     /// <summary>
     /// 돈이 변경되었을 때 실행될 델리게이트
@@ -127,11 +158,31 @@ public class Player : MonoBehaviour, IHealth
     /// </summary>
     public void Die()
     {
-        if (IsAlive)    // 살아있을 때만 죽게 만들기
+        isAlive = false;
+        onDie?.Invoke();
+        Debug.Log("플레이어 사망");
+    }
+
+    /// <summary>
+    /// 마나를 지속적으로 회복시키는 함수
+    /// </summary>
+    /// <param name="totalRegen">전체 회복량</param>
+    /// <param name="duration">전체 회복하는데 걸리는 시간</param>
+    public void ManaRegenerate(float totalRegen, float duration)
+    {
+        StartCoroutine(ManaGenerateCoroutine(totalRegen, duration));
+    }
+
+    IEnumerator ManaGenerateCoroutine(float totalRegen, float duration)
+    {
+        // 초당 회복량 : totalRegen/duration
+        float regenPerSec = totalRegen / duration;
+        float timeElapsed = 0.0f;
+        while( timeElapsed < duration )
         {
-            isAlive = false;
-            onDie?.Invoke();
-            Debug.Log("플레이어 사망");
+            timeElapsed += Time.deltaTime;
+            MP += Time.deltaTime * regenPerSec;
+            yield return null;
         }
     }
 
