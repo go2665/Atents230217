@@ -8,7 +8,7 @@ using System;
 using UnityEditor;
 #endif
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IHealth
 {
     /// <summary>
     /// 이 플레이어가 가지고 있을 인벤토리
@@ -27,11 +27,56 @@ public class Player : MonoBehaviour
             if(money != value)
             {
                 money = value;
-                // Debug.Log($"Money : {money}");
+                //Debug.Log($"Money : {money}");
                 onMoneyChange?.Invoke(money);
             }
         }
     }
+
+    /// <summary>
+    /// 생존 여부 표시용 변수
+    /// </summary>
+    bool isAlive = true;
+    public bool IsAlive => isAlive;
+
+    /// <summary>
+    /// 플레이어의 현재 HP
+    /// </summary>
+    float hp = 100.0f;
+    public float HP 
+    { 
+        get => hp; 
+        set
+        {
+            hp = value;
+            if( hp < 0 )
+            {
+                Die();
+            }            
+            hp = Mathf.Clamp(hp, 0, maxHP);
+            onHealthChange?.Invoke(hp / maxHP);
+        }
+    }
+
+    /// <summary>
+    /// HP가 변경되었을 때 실행될 델리게이트
+    /// </summary>
+    public Action<float> onHealthChange { get; set; }
+
+    /// <summary>
+    /// 플레이어가 죽었을 때 실행될 델리게이트
+    /// </summary>
+    public Action onDie { get; set; }
+
+    /// <summary>
+    /// 플레이어의 최대 HP
+    /// </summary>
+    float maxHP = 100.0f;
+    public float MaxHP => maxHP;
+
+    /// <summary>
+    /// 돈이 변경되었을 때 실행될 델리게이트
+    /// </summary>
     public Action<int> onMoneyChange;
 
     /// <summary>
@@ -74,6 +119,19 @@ public class Player : MonoBehaviour
             {
                 Destroy(item.gameObject);           // 성공하면 먹은 아이템 삭제하기
             }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어 사망 처리용 함수
+    /// </summary>
+    public void Die()
+    {
+        if (IsAlive)    // 살아있을 때만 죽게 만들기
+        {
+            isAlive = false;
+            onDie?.Invoke();
+            Debug.Log("플레이어 사망");
         }
     }
 
