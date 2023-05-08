@@ -35,4 +35,11 @@ interface IHealth
     /// </summary>
     Action onDie { get; set; }
 
+    /// <summary>
+    /// 체력을 지속적으로 증가시켜 주는 함수. 초당 totalRegen/duration만큼씩 회복
+    /// </summary>
+    /// <param name="totalRegen">전체 회복량</param>
+    /// <param name="duration">전체 회복하는데 걸리는 시간</param>
+    void HealthRegenerate(float totalRegen, float duration);
+
 }
