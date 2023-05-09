@@ -20,4 +20,14 @@ public class Test_Item_Equip : Test_Base
     {
         player.Inventory.AddItem(ItemCode.IronSword);
     }
+
+    protected override void Test3(InputAction.CallbackContext _)
+    {
+        player.Inventory.AddItem(ItemCode.SilverSword);
+    }
+
+    protected override void Test4(InputAction.CallbackContext _)
+    {
+        player.Inventory.AddItem(ItemCode.OldSword);
+    }
 }
