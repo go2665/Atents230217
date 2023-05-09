@@ -95,7 +95,8 @@ public class ItemSlotUI : ItemSlotUI_Base, IDragHandler, IBeginDragHandler, IEnd
     /// <summary>
     /// 슬롯을 클릭했을 때 실행되는 함수.
     /// 임시 슬롯에 있는 아이템을 이 슬롯에 넣기 위한 용도
-    /// (아이템 분리하기 위한 용도)
+    /// 아이템 분리하기 위한 용도
+    /// 아이템 사용하기 위한 용도
     /// </summary>
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)

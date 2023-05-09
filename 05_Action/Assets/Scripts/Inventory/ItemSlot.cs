@@ -147,4 +147,21 @@ public class ItemSlot
                 $"현재 {ItemCount}개.");
         }
     }
+
+
+    /// <summary>
+    /// 아이템을 사용하는 함수
+    /// </summary>
+    /// <param name="target">아이템의 효과를 받을 대상</param>
+    public void UseItem(GameObject target)
+    {
+        IUsable usable = ItemData as IUsable;
+        if( usable != null )            // 사용 가능한 아이템이면
+        {
+            if(usable.Use(target))      // 사용 시도하고
+            {
+                DecreaseSlotItem();     // 사용에 성공하면 갯수 하나 감소
+            }
+        }
+    }
 }
