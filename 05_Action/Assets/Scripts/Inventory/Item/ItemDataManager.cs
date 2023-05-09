@@ -12,7 +12,8 @@ public enum ItemCode
     GoldCoin,
     Apple,
     Beer,
-    HealingPotion
+    HealingPotion,
+    ManaPotion
 }
 
 public enum ItemSortBy
