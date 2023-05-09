@@ -197,8 +197,10 @@ public class InventoryUI : MonoBehaviour
             }
             else
             {
-                // 아이템 사용 용도로 클릭했다.
+                // 아이템 사용 또는 장비하기 위해 클릭했다.
+
                 inven[slotID].UseItem(Owner.gameObject);    // 소유자에게 아이템 사용하기
+                inven[slotID].EquipItem(Owner.gameObject);  // 소유자가 아이템 장비/해제해보기
             }
         }
     }
