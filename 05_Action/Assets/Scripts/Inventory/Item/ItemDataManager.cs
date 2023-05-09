@@ -16,6 +16,12 @@ public enum ItemCode
     ManaPotion
 }
 
+public enum EquipType
+{
+    Weapon = 0,
+    Shield
+}
+
 public enum ItemSortBy
 {
     Code,   // 코드 기준으로 정렬
