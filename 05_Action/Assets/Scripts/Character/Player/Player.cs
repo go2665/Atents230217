@@ -127,7 +127,6 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
     /// </summary>
     public ItemSlot this[EquipType part] => partsSlots[(int)part];
 
-
     /// <summary>
     /// 돈이 변경되었을 때 실행될 델리게이트
     /// </summary>
@@ -137,6 +136,11 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
     /// 아이템을 줏을 수 있는 거리
     /// </summary>
     public float ItemPickupRange = 2.0f;
+
+    /// <summary>
+    /// 무기 활성화 비활성화를 알리는 델리게이트. 파라메터가 true면 켜는 것, false면 꺼지는 것
+    /// </summary>
+    Action<bool> onWeaponEnable;
 
     PlayerController playerController;
 
@@ -248,8 +252,15 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
         if(equip!= null)
         {
             Transform partParent = GetPartTransform(part);
-            GameObject.Instantiate(equip.equipPrefab, partParent);  // 생성하고
+            GameObject obj = Instantiate(equip.equipPrefab, partParent);  // 생성하고
             partsSlots[(int)part] = slot;                           // 기록해 놓기
+            slot.IsEquipped = true;                                 // 장비되었다고 알림
+
+            if(part == EquipType.Weapon)
+            {
+                Weapon weapon = obj.GetComponent<Weapon>();
+                onWeaponEnable = weapon.ColliderEnable;
+            }
         }
     }
 
@@ -266,6 +277,13 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
             child.SetParent(null);
             Destroy(child.gameObject);
         }
+
+        if (part == EquipType.Weapon)
+        {
+            onWeaponEnable = null;
+        }
+
+        partsSlots[(int)part].IsEquipped = false;           // 장비 해제되었다고 알림
         partsSlots[(int)part] = null;                       // 기록 비워두기
     }
 
@@ -287,6 +305,16 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
                 break;
         }
         return result;
+    }
+
+    public void WeaponEnable()
+    {
+        onWeaponEnable?.Invoke(true);
+    }
+
+    public void WeaponDisable()
+    {
+        onWeaponEnable?.Invoke(false);
     }
 
     /// <summary>
