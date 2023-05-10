@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    public GameObject hitEffect;
+
+    // 공격을 했을 때 적이 맞으면 맞은 위치에 hitEffect 생성하기
+    // 이팩트 효과가 끝나면 자동으로 사라지게 만들기
+
+
     /// <summary>
     /// 칼날의 역할을 할 컬라이더. 특정 타이밍에만 활성화
     /// </summary>
