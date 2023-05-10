@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    /// <summary>
+    /// 공격했을 때 나올 이팩트 프리팹
+    /// </summary>
     public GameObject hitEffect;
-
-    // 공격을 했을 때 적이 맞으면 맞은 위치에 hitEffect 생성하기
-    // 이팩트 효과가 끝나면 자동으로 사라지게 만들기
-
 
     /// <summary>
     /// 칼날의 역할을 할 컬라이더. 특정 타이밍에만 활성화
@@ -31,6 +30,12 @@ public class Weapon : MonoBehaviour
         if(other.CompareTag("Enemy"))
         {
             Debug.Log($"{other.name}을 공격했다.");
+
+            // 공격을 했을 때 적이 맞으면 맞은 위치에 hitEffect 생성하기
+            Vector3 impactPoint = transform.position + transform.up;    // 무기의 임팩트 지점(대략적으로 구함)
+            Vector3 effectPoint = other.ClosestPoint(impactPoint);  // 무기 임팩트 지점과 가장 가까운 지점(컬라이더의 표면)
+
+            Instantiate(hitEffect, effectPoint, Quaternion.identity);
         }
     }
 
