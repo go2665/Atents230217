@@ -17,6 +17,8 @@ public enum ItemCode
     IronSword,
     SilverSword,
     OldSword,
+    RoundShield,
+    KiteShield
 }
 
 public enum EquipType

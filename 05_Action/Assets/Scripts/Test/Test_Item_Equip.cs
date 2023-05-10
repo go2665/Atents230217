@@ -8,7 +8,9 @@ public class Test_Item_Equip : Test_Base
     Player player;
     private void Start()
     {
-        player = GameManager.Inst.Player;        
+        player = GameManager.Inst.Player;
+        ItemFactory.MakeItem(ItemCode.RoundShield);
+        ItemFactory.MakeItem(ItemCode.KiteShield);
     }
 
     protected override void Test1(InputAction.CallbackContext _)
