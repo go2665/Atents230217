@@ -10,6 +10,9 @@ public class AttackState : StateMachineBehaviour
 {
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        // 무조건 무기 보이게 하기
+        GameManager.Inst.Player.ShowWeaponAndShield(true);
+
         // 공격 시작할 때 무기 이팩트 켜기
         GameManager.Inst.Player.WeaponEffectEnable(true);   
     }
