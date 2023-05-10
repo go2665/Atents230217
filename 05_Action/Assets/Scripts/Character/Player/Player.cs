@@ -142,6 +142,11 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
     /// </summary>
     Action<bool> onWeaponEnable;
 
+    /// <summary>
+    /// 무기 이펙트 활성화 비활성화를 알리는 델리게이트. 파라메터가 true면 켜는 것, false면 꺼지는 것
+    /// </summary>
+    Action<bool> onWeaponEffectEnable;
+
     PlayerController playerController;
 
     private void Awake()
@@ -260,6 +265,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
             {
                 Weapon weapon = obj.GetComponent<Weapon>();
                 onWeaponEnable = weapon.ColliderEnable;
+                onWeaponEffectEnable = weapon.EffectPlay;
             }
         }
     }
@@ -281,6 +287,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
         if (part == EquipType.Weapon)
         {
             onWeaponEnable = null;
+            onWeaponEffectEnable = null;
         }
 
         partsSlots[(int)part].IsEquipped = false;           // 장비 해제되었다고 알림
@@ -307,14 +314,29 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
         return result;
     }
 
+    /// <summary>
+    /// 무기 컬러이더 활성화하라고 신호 보내는 함수.(애니메이션에서 실행 시킴)
+    /// </summary>
     public void WeaponEnable()
     {
         onWeaponEnable?.Invoke(true);
     }
 
+    /// <summary>
+    /// 무기 컬러이더 비활성화하라고 신호 보내는 함수.(애니메이션에서 실행 시킴)
+    /// </summary>
     public void WeaponDisable()
     {
         onWeaponEnable?.Invoke(false);
+    }
+
+    /// <summary>
+    /// 무기 이팩트 활성화/비활성화하라고 신호보내는 함수.(Attack 계열 애니메이션에서 실행 시킴)
+    /// </summary>
+    /// <param name="enable">true면 활성화, false면 비활성화</param>
+    public void WeaponEffectEnable(bool enable)
+    {
+        onWeaponEffectEnable?.Invoke(enable);
     }
 
     /// <summary>
