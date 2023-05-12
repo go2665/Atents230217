@@ -323,6 +323,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""InvenforyOnOff"",
+                    ""type"": ""Button"",
+                    ""id"": ""c3a553f2-3e13-4528-970c-dad3ea01fbb7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -345,6 +354,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1dee869a-c5f9-48d5-b344-b8febe32d40c"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InvenforyOnOff"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -390,6 +410,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
         m_UI_Shift = m_UI.FindAction("Shift", throwIfNotFound: true);
+        m_UI_InvenforyOnOff = m_UI.FindAction("InvenforyOnOff", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -606,12 +627,14 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_Click;
     private readonly InputAction m_UI_Shift;
+    private readonly InputAction m_UI_InvenforyOnOff;
     public struct UIActions
     {
         private @PlayerInputActions m_Wrapper;
         public UIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Click => m_Wrapper.m_UI_Click;
         public InputAction @Shift => m_Wrapper.m_UI_Shift;
+        public InputAction @InvenforyOnOff => m_Wrapper.m_UI_InvenforyOnOff;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -627,6 +650,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Shift.started -= m_Wrapper.m_UIActionsCallbackInterface.OnShift;
                 @Shift.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnShift;
                 @Shift.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnShift;
+                @InvenforyOnOff.started -= m_Wrapper.m_UIActionsCallbackInterface.OnInvenforyOnOff;
+                @InvenforyOnOff.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnInvenforyOnOff;
+                @InvenforyOnOff.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnInvenforyOnOff;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -637,6 +663,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Shift.started += instance.OnShift;
                 @Shift.performed += instance.OnShift;
                 @Shift.canceled += instance.OnShift;
+                @InvenforyOnOff.started += instance.OnInvenforyOnOff;
+                @InvenforyOnOff.performed += instance.OnInvenforyOnOff;
+                @InvenforyOnOff.canceled += instance.OnInvenforyOnOff;
             }
         }
     }
@@ -673,5 +702,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     {
         void OnClick(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);
+        void OnInvenforyOnOff(InputAction.CallbackContext context);
     }
 }
