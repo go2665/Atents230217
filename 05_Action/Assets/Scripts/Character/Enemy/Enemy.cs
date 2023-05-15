@@ -64,6 +64,11 @@ public class Enemy : MonoBehaviour
                         stateUpdate = Update_Patrol;    // Patrol 상태용 업데이트 함수 설정
                         break;
                     case EnemyState.Chase:
+                        // Chase 상태가 될 때 처리해야 할 일들
+                        agent.isStopped = false;        // 길찾기 정지를 해제(다시 움직일 수 있게 설정)
+                        agent.SetDestination(chaseTarget.position); // 추적 대상으로 이동하게 설정
+                        anim.SetTrigger("Move");        // 이동 애니메이션 재생
+                        stateUpdate = Update_Chase;     // Chase 상태용 업데이트 함수 설정
                         break;
                     case EnemyState.Attack:
                         break;
@@ -115,6 +120,27 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    // 추적 관련 데이터 ----------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 전체 시야 범위
+    /// </summary>
+    public float sightRange = 10.0f;
+
+    /// <summary>
+    /// 시야각의 절반
+    /// </summary>
+    public float sightHalfAngle = 50.0f;
+
+    /// <summary>
+    /// 근접 시야 범위
+    /// </summary>
+    public float closeSightRange = 2.5f;
+
+    /// <summary>
+    /// 추적할 대상의 트랜스폼
+    /// </summary>
+    Transform chaseTarget;
 
     // 컴포넌트 ------------------------------------------------------------------------------------
 
@@ -151,8 +177,14 @@ public class Enemy : MonoBehaviour
     /// </summary>
     void Update_Patrol()
     {
-        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        if (SearchPlayer())
         {
+            // 플레이어 발견하면 즉시 추적상태로 변경
+            State = EnemyState.Chase;
+        }
+        else if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            // 목적지에 도착했다.
             moveTarget = waypoints.Next();  // 도착하면 다음 지점 설정해 놓고
             State = EnemyState.Wait;        // 대기 상태로 변경
         }
@@ -163,6 +195,69 @@ public class Enemy : MonoBehaviour
     /// </summary>
     void Update_Wait()
     {
-        WaitTimer -= Time.deltaTime;
+        if (SearchPlayer())
+        {
+            // 플레이어 발견하면 즉시 추적상태로 변경
+            State = EnemyState.Chase;
+        }
+        else
+        {
+            // 그냥 기다리고 있는 상황이면
+            WaitTimer -= Time.deltaTime;    // 타이머만 계속 감소
+        }
+    }
+
+    void Update_Chase()
+    {
+        if (SearchPlayer())
+        {
+            // 플레이어 발견하면 즉시 추적상태로 변경
+            State = EnemyState.Chase;
+        }
+        else
+        {
+            // 안보이면 대기 상태로
+            State = EnemyState.Wait;
+        }
+    }
+
+    bool SearchPlayer()
+    {
+        bool result = false;
+
+        Collider[] colliders = Physics.OverlapSphere(transform.position, sightRange, LayerMask.GetMask("Player"));
+        if(colliders.Length > 0 )
+        {
+            Vector3 playerPos = colliders[0].transform.position;
+            Vector3 toPlayerDir = playerPos - transform.position;
+            if(toPlayerDir.sqrMagnitude < closeSightRange * closeSightRange)
+            {
+                // 근접 시야 범위 안에 플레이어가 있다.
+                chaseTarget = colliders[0].transform;
+                result = true;
+            }
+            else
+            {
+                // 전체 시야 범위 안에 플레이어가 있다.
+                float angle = Vector3.Angle(transform.forward, toPlayerDir);
+                if(angle < sightHalfAngle)
+                {
+                    // 시야각 안에 플레이어가 있다.
+                    Ray ray = new Ray(transform.position + transform.up * 0.5f, toPlayerDir);
+                    if( Physics.Raycast(ray, out RaycastHit hit, sightRange))
+                    {
+                        // 시야에 부딪친 물체가 있다.
+                        if( hit.collider.CompareTag("Player"))
+                        {
+                            // 부딪친 물체가 플레이어이다.
+                            chaseTarget = colliders[0].transform;
+                            result = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 }
