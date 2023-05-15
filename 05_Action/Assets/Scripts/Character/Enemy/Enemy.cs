@@ -30,29 +30,38 @@ public class Enemy : MonoBehaviour
         Die         // 죽은 상태
     }
 
-    EnemyState state = EnemyState.Patrol;
+    /// <summary>
+    /// 현재 적의 상태
+    /// </summary>
+    EnemyState state = EnemyState.Patrol;   // Start할 때 wait로 설정하기 위해 임시로 설정
+
+    /// <summary>
+    /// 상태를 확인하고 변경시 일어나는 처리를 하는 프로퍼티
+    /// </summary>
     EnemyState State
     {
         get => state;
         set
         {
-            if (state != value)
+            if (state != value)     // 상태가 변경될 때만 실행
             {
                 state = value;
-                switch (state) 
+                switch (state)      // 변경된 상태에 따라 서로 다른 처리를 수행
                 { 
                     case EnemyState.Wait:
-                        agent.isStopped = true;
-                        agent.velocity = Vector3.zero;
-                        WaitTimer = waitDuration + UnityEngine.Random.Range(0.0f, 0.5f);
-                        anim.SetTrigger("Stop");
-                        stateUpdate = Update_Wait;
+                        // Wait 상태가 될 때 처리해야 할 일들
+                        agent.isStopped = true;         // 길찾기로 움직이던 것 정지
+                        agent.velocity = Vector3.zero;  // 길찾기 관성 제거
+                        anim.SetTrigger("Stop");        // Idle 애니메이션 재생
+                        WaitTimer = waitDuration + UnityEngine.Random.Range(0.0f, 0.5f);    // 기다릴 시간 설정
+                        stateUpdate = Update_Wait;      // Wait 상태용 업데이트 함수 설정
                         break;
                     case EnemyState.Patrol:
-                        agent.isStopped = false;
-                        agent.SetDestination(moveTarget.position);
-                        anim.SetTrigger("Move");
-                        stateUpdate = Update_Patrol;
+                        // Patrol 상태가 될 때 처리해야 할 일들
+                        agent.isStopped = false;        // 길찾기 정지를 해제(다시 움직일 수 있게 설정)
+                        agent.SetDestination(moveTarget.position);  // 움직일 목적지 설정
+                        anim.SetTrigger("Move");        // 이동 애니메이션 재생
+                        stateUpdate = Update_Patrol;    // Patrol 상태용 업데이트 함수 설정
                         break;
                     case EnemyState.Chase:
                         break;
@@ -65,6 +74,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 상태별 Update함수를 저장할 델리게이트
+    /// </summary>
     Action stateUpdate = null;
 
     // 순찰 관련 데이터 ----------------------------------------------------------------------------
@@ -87,7 +99,7 @@ public class Enemy : MonoBehaviour
     public float waitDuration = 1.0f;
 
     /// <summary>
-    /// 실제로 기다린 시간
+    /// 실제로 기다릴 시간
     /// </summary>
     float waitTimer = 0.0f;
     float WaitTimer
@@ -96,7 +108,7 @@ public class Enemy : MonoBehaviour
         set
         {
             waitTimer = value;
-            if( waypoints != null && waitTimer < 0.0f)
+            if( waypoints != null && waitTimer < 0.0f)  // waitTimer이 0보다 작아지면 순찰 상태로 전환
             {
                 State = EnemyState.Patrol;
             }
@@ -118,7 +130,7 @@ public class Enemy : MonoBehaviour
         defaultWaypoints.transform.SetParent(null);
         if ( waypoints == null ) 
         {
-            waypoints = defaultWaypoints;
+            waypoints = defaultWaypoints;   // 따로 설정한 웨이포인트가 없으면 자식으로 붙어있는 웨이포인트 사용
         }
     }
 
@@ -126,23 +138,29 @@ public class Enemy : MonoBehaviour
     {
         moveTarget = waypoints.Current;
         State = EnemyState.Wait;
-        anim.ResetTrigger("Stop");
+        anim.ResetTrigger("Stop");          // 첫 Wait 상태로 가면서 Stop 트리거가 미리 설정되는 것 방지
     }
 
     private void Update()
     {
-        stateUpdate();
+        stateUpdate();      // 현재 상태의 Update 함수 수행
     }
 
+    /// <summary>
+    /// 순찰용 Update 함수
+    /// </summary>
     void Update_Patrol()
     {
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            moveTarget = waypoints.Next();
-            State = EnemyState.Wait;
+            moveTarget = waypoints.Next();  // 도착하면 다음 지점 설정해 놓고
+            State = EnemyState.Wait;        // 대기 상태로 변경
         }
     }
 
+    /// <summary>
+    /// 대기용 Update 함수
+    /// </summary>
     void Update_Wait()
     {
         WaitTimer -= Time.deltaTime;
