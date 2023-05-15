@@ -130,26 +130,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 10185191657897045, guid: 87013505d17543c43bd447005a707389,
-        type: 3}
-      propertyPath: m_CastShadows
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2949670064652976187, guid: 87013505d17543c43bd447005a707389,
-        type: 3}
-      propertyPath: m_CastShadows
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2949670064652976187, guid: 87013505d17543c43bd447005a707389,
-        type: 3}
-      propertyPath: m_DynamicOccludee
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2949670064652976187, guid: 87013505d17543c43bd447005a707389,
-        type: 3}
-      propertyPath: m_LightProbeUsage
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8189980434977739222, guid: 87013505d17543c43bd447005a707389,
         type: 3}
       propertyPath: m_Name
@@ -396,12 +376,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!4 &214632341 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5514248043482254508, guid: 87013505d17543c43bd447005a707389,
-    type: 3}
-  m_PrefabInstance: {fileID: 47015777}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &370714795
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -669,27 +643,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!1 &810102419 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8189980434977739222, guid: 87013505d17543c43bd447005a707389,
-    type: 3}
-  m_PrefabInstance: {fileID: 47015777}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &810102424
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 810102419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eb98047342c4ac4ab318ae38c923847, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponParent: {fileID: 1356518660}
-  shieldParent: {fileID: 214632341}
-  ItemPickupRange: 2
 --- !u!4 &810102425 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8855052669661678444, guid: 87013505d17543c43bd447005a707389,
