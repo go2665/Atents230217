@@ -172,8 +172,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattle
         playerController = GetComponent<PlayerController>();
         playerController.onItemPickUp = OnItemPickUp;   // 아이템 줍는다는 신호가 들어오면 줍는 처리 실행
 
-        dieCamera = GetComponentInChildren<CinemachineVirtualCamera>();
-        dieCamera.gameObject.SetActive(false);
+        dieCamera = GetComponentInChildren<CinemachineVirtualCamera>(true);
 
         //weaponParent = FindObjectOfType<WeaponPosition>().transform;
 
@@ -224,7 +223,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattle
         anim.SetLayerWeight(1, 0.0f);
         anim.SetTrigger("Die");
         
-        dieCamera.gameObject.SetActive(true);
+        dieCamera.gameObject.SetActive(true);        
 
         onDie?.Invoke();
         Debug.Log("플레이어 사망");
