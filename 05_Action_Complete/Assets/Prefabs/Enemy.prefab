@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 197120871}
   - component: {fileID: 197120873}
   - component: {fileID: 197120872}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 611534158}
   - component: {fileID: 611534160}
   - component: {fileID: 611534159}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: FillImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,7 +176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 952604060}
   - component: {fileID: 952604061}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: HP_Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -221,7 +221,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2095678803}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -808,7 +808,7 @@ GameObject:
   - component: {fileID: 3584998723765196802}
   - component: {fileID: 2294351495448037709}
   - component: {fileID: 9125025463602839082}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: AttackArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -867,7 +867,7 @@ GameObject:
   - component: {fileID: 1726400908210933338}
   - component: {fileID: 8875838147766761388}
   - component: {fileID: 6158008666271633771}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: MinimapIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
