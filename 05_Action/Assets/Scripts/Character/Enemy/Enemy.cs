@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
                         break;
                     case EnemyState.DieState:
                         agent.isStopped = true;     // 길찾기 정지
-                        agent.velocity = Vector3.zero;
+                        agent.velocity = Vector3.zero;                        
                         anim.SetTrigger("Die");     // 사망 애니메이션 재생   
                         stateUpdate = Update_Die;
                         break;
@@ -345,9 +345,9 @@ public class Enemy : MonoBehaviour, IBattle, IHealth
     {
         if( State != EnemyState.DieState )
         {
+            Debug.Log($"{Mathf.Max(1, damage - DefencePower)}만큼의 데미지를 입었습니다. ({HP})");
             anim.SetTrigger("Hit");
             HP -= Mathf.Max(1, damage - DefencePower);
-            Debug.Log($"{Mathf.Max(1, damage - DefencePower)}만큼의 데미지를 입었습니다.");
         }
     }
 

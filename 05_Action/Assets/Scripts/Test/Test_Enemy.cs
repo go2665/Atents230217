@@ -21,7 +21,7 @@ public class Test_Enemy : Test_Base
     }
 
     protected override void Test2(InputAction.CallbackContext _)
-    {        
+    {
         enemy.Die();
     }
 
@@ -33,5 +33,10 @@ public class Test_Enemy : Test_Base
     protected override void Test4(InputAction.CallbackContext _)
     {
         enemy.Test_DropCheck(1000000);
+    }
+
+    protected override void Test5(InputAction.CallbackContext _)
+    {
+        enemy.Defence(40);
     }
 }
