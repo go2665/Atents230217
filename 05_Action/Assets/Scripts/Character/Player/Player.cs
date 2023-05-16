@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.VisualScripting;
 using System;
+using Cinemachine;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -162,12 +163,17 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattle
 
     Animator anim;
 
+    CinemachineVirtualCamera dieCamera;
+
     private void Awake()
     {
         anim = GetComponent<Animator>();
 
         playerController = GetComponent<PlayerController>();
         playerController.onItemPickUp = OnItemPickUp;   // 아이템 줍는다는 신호가 들어오면 줍는 처리 실행
+
+        dieCamera = GetComponentInChildren<CinemachineVirtualCamera>();
+        dieCamera.gameObject.SetActive(false);
 
         //weaponParent = FindObjectOfType<WeaponPosition>().transform;
 
@@ -214,6 +220,9 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattle
     public void Die()
     {
         isAlive = false;
+        
+        dieCamera.gameObject.SetActive(true);
+
         onDie?.Invoke();
         Debug.Log("플레이어 사망");
     }
