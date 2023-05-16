@@ -220,6 +220,9 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattle
     public void Die()
     {
         isAlive = false;
+
+        anim.SetLayerWeight(1, 0.0f);
+        anim.SetTrigger("Die");
         
         dieCamera.gameObject.SetActive(true);
 
