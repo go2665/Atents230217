@@ -6,7 +6,13 @@ using UnityEngine.InputSystem;
 public class Test_Enemy : Test_Base
 {
     Player player;
-    
+    Enemy enemy;
+
+    private void Start()
+    {
+        enemy = FindObjectOfType<Enemy>();
+    }
+
     protected override void Test1(InputAction.CallbackContext _)
     {
         player = GameManager.Inst.Player;
@@ -15,8 +21,17 @@ public class Test_Enemy : Test_Base
     }
 
     protected override void Test2(InputAction.CallbackContext _)
-    {
-        Enemy enemy = FindObjectOfType<Enemy>();
+    {        
         enemy.Die();
+    }
+
+    protected override void Test3(InputAction.CallbackContext _)
+    {
+        enemy.Test_ItemDrop();
+    }
+
+    protected override void Test4(InputAction.CallbackContext _)
+    {
+        enemy.Test_DropCheck(1000000);
     }
 }
